@@ -56,7 +56,7 @@
 }
 
 .tabs-vertical .tabs-vertical-panel[aria-hidden='true'] {
-  display: none;
+  display: none !important;
 }
 
 /* Text column: heading + bullet list + CTA */
@@ -80,9 +80,33 @@
   line-height: 1.7;
 }
 
-.tabs-vertical .tabs-vertical-panel a {
-  font-weight: 600;
+/* Panel CTA is a tertiary link (blue text + arrow), never a bordered button */
+.tabs-vertical .tabs-vertical-text a,
+.tabs-vertical .tabs-vertical-text a.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--link-color);
+  font-weight: 600;
+}
+
+.tabs-vertical .tabs-vertical-text a::after {
+  content: '\203A'; /* › */
+  font-weight: 400;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.tabs-vertical .tabs-vertical-text a:hover {
+  color: var(--link-hover-color);
+  background: transparent;
+  text-decoration: underline;
 }
 
 /* Media column: the tab's image */
@@ -128,7 +152,20 @@
 
   .tabs-vertical .tabs-vertical-panel {
     flex: 1 1 auto;
-    grid-template-columns: 1fr 1fr;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 40px;
+    align-items: center;
+  }
+
+  /* Explicit placement so text is always the left column and the image the
+     right column, regardless of source order or auto-placement. */
+  .tabs-vertical .tabs-vertical-text {
+    grid-column: 1;
+  }
+
+  .tabs-vertical .tabs-vertical-media {
+    grid-column: 2;
+    min-width: 0;
   }
 }

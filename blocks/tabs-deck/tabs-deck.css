@@ -50,78 +50,184 @@
   cursor: initial;
 }
 
-/* Panel: full-bleed image with heading + body + CTA overlaid at the bottom-left */
+/* Panel: two parts — an image card (photo + overlaid text) beside a product-UI
+   Lottie animation, matching the live "Get it all done" cards. */
 .tabs-deck .tabs-deck-panel {
-  position: relative;
   padding: 0;
-  overflow: hidden;
   border-radius: 24px;
-  min-height: 420px;
-  display: flex;
-  align-items: flex-end;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
 }
 
 .tabs-deck .tabs-deck-panel[aria-hidden='true'] {
   display: none;
 }
 
-.tabs-deck .tabs-deck-panel picture,
-.tabs-deck .tabs-deck-panel img {
+/* Image card: photo with the text card overlaid on top */
+.tabs-deck .tabs-deck-media {
+  position: relative;
+  grid-column: 1;
+  min-height: 360px;
+  line-height: 0;
+}
+
+.tabs-deck .tabs-deck-media picture,
+.tabs-deck .tabs-deck-media img {
   position: absolute;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
 }
 
-.tabs-deck .tabs-deck-panel > *:not(picture, img) {
-  position: relative;
+/* Text overlay: translucent white card with dark text */
+.tabs-deck .tabs-deck-body {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  right: 32px;
   z-index: 1;
+  padding: 32px;
+  max-width: 380px;
+  line-height: normal;
+  border-radius: 25px;
+  background-color: rgb(255 255 255 / 82%);
+  backdrop-filter: blur(6px);
+  color: var(--brand-navy);
 }
 
-.tabs-deck .tabs-deck-panel h3 {
-  margin: 0 0 8px;
-  padding: 0 32px;
-  color: #fff;
+.tabs-deck .tabs-deck-body h3 {
+  margin: 0 0 12px;
+  color: var(--brand-navy);
   font-size: 28px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-.tabs-deck .tabs-deck-panel p {
-  margin: 0;
-  padding: 0 32px;
-  max-width: 520px;
-  color: rgb(255 255 255 / 92%);
+.tabs-deck .tabs-deck-body p {
+  margin: 0 0 12px;
+  color: var(--text-color);
   font-size: 16px;
   line-height: 1.5;
 }
 
-.tabs-deck .tabs-deck-panel p:last-child {
-  padding-bottom: 32px;
+/* CTA is a tertiary link: blue text, no border/background */
+.tabs-deck .tabs-deck-body a,
+.tabs-deck .tabs-deck-body a.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--link-color);
+  font-weight: 400;
+  text-decoration: none;
 }
 
-.tabs-deck .tabs-deck-panel a {
-  color: #fff;
-  font-weight: 600;
+.tabs-deck .tabs-deck-body a::after {
+  content: '\203A';
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.tabs-deck .tabs-deck-body a:hover {
+  color: var(--link-hover-color);
   text-decoration: underline;
 }
 
-/* readability scrim behind the overlay text */
-.tabs-deck .tabs-deck-panel::after {
+/* Animation column: product-UI Lottie on a tinted stage */
+.tabs-deck .tabs-deck-anim {
+  position: relative;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: var(--light-color);
+}
+
+.tabs-deck .tabs-deck-anim-stage {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+}
+
+.tabs-deck .tabs-deck-anim-stage svg {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Play/pause control for the animation */
+.tabs-deck .tabs-deck-anim-toggle {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgb(13 0 49 / 55%);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tabs-deck .tabs-deck-anim-toggle:hover,
+.tabs-deck .tabs-deck-anim-toggle:focus-visible {
+  background-color: rgb(13 0 49 / 80%);
+}
+
+.tabs-deck .tabs-deck-anim-toggle[data-state='playing']::before,
+.tabs-deck .tabs-deck-anim-toggle[data-state='playing']::after {
   content: '';
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: linear-gradient(to top, rgb(0 0 0 / 55%) 0%, rgb(0 0 0 / 0%) 55%);
+  top: 50%;
+  width: 4px;
+  height: 14px;
+  background: #fff;
+  transform: translateY(-50%);
+}
+
+.tabs-deck .tabs-deck-anim-toggle[data-state='playing']::before { left: 15px; }
+.tabs-deck .tabs-deck-anim-toggle[data-state='playing']::after { right: 15px; }
+
+.tabs-deck .tabs-deck-anim-toggle[data-state='paused']::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 52%;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 12px solid #fff;
+  transform: translate(-50%, -50%);
 }
 
 @media (width >= 900px) {
   .tabs-deck .tabs-deck-panel {
+    grid-template-columns: 1fr 1fr;
     min-height: 520px;
   }
 
-  .tabs-deck .tabs-deck-panel h3 {
+  .tabs-deck .tabs-deck-media {
+    grid-column: 1;
+    min-height: 520px;
+  }
+
+  .tabs-deck .tabs-deck-anim {
+    grid-column: 2;
+  }
+
+  .tabs-deck .tabs-deck-body h3 {
     font-size: 34px;
   }
 }

@@ -3,15 +3,18 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 /**
  * hero-split — text-on-one-side / image-on-the-other split hero on a light background.
  *
+ * The image side is an autoplaying carousel (cross-fade) with a play/pause
+ * control, mirroring the live QuickBooks hero image stack. When only one image
+ * is authored it renders as a static picture.
+ *
  * Content contract (DA table authoring):
- *   Either a single row with two cells (text | image), or two rows where one row
- *   holds a picture and the other holds the text (heading + paragraph + CTAs + trust line).
- *   Authors may omit the image cell (text-only) — the block degrades gracefully.
+ *   Either a single row with two cells (text | image[s]), or two rows where one
+ *   row holds the picture(s) and the other holds the text (heading + paragraph
+ *   + CTAs + trust line). Authors may omit the image cell (text-only).
  */
 export default function decorate(block) {
   const rows = [...block.children];
 
-  // Collect a text side and an image side, defensively — authors omit and add cells.
   let textCell;
   let imageCell;
 
@@ -23,7 +26,6 @@ export default function decorate(block) {
   cells.forEach((cell) => {
     const hasPicture = cell.querySelector('picture, img');
     const hasText = cell.textContent.trim().length > 0;
-    // A picture-only cell is the image side; any cell with text is the text side.
     if (hasPicture && !hasText && !imageCell) {
       imageCell = cell;
     } else if (hasText && !textCell) {
@@ -33,7 +35,6 @@ export default function decorate(block) {
     }
   });
 
-  // Fallbacks when the split couldn't be resolved cleanly.
   if (!textCell) [textCell] = cells;
   if (!imageCell) {
     imageCell = cells.find((c) => c !== textCell && c.querySelector('picture, img'));
@@ -46,18 +47,82 @@ export default function decorate(block) {
   if (textCell) content.append(...textCell.childNodes);
   block.append(content);
 
-  if (imageCell) {
-    const media = document.createElement('div');
-    media.className = 'hero-split-media';
-    const img = imageCell.querySelector('img');
+  if (!imageCell) {
+    block.classList.add('no-image');
+    return;
+  }
+
+  const media = document.createElement('div');
+  media.className = 'hero-split-media';
+
+  const imgs = [...imageCell.querySelectorAll('img')];
+
+  // Single image → static picture.
+  if (imgs.length <= 1) {
+    const img = imgs[0];
     if (img) {
-      const optimized = createOptimizedPicture(img.src, img.alt, false, [{ width: '900' }]);
-      media.append(optimized);
+      media.append(createOptimizedPicture(img.src, img.alt, false, [{ width: '900' }]));
     } else {
       media.append(...imageCell.childNodes);
     }
     block.append(media);
+    return;
+  }
+
+  // Multiple images → autoplaying cross-fade carousel.
+  const track = document.createElement('div');
+  track.className = 'hero-split-carousel';
+
+  imgs.forEach((img, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'hero-split-slide';
+    slide.setAttribute('aria-hidden', i !== 0);
+    slide.append(createOptimizedPicture(img.src, img.alt, i === 0, [{ width: '900' }]));
+    track.append(slide);
+  });
+  media.append(track);
+
+  // Play/pause control.
+  const control = document.createElement('button');
+  control.type = 'button';
+  control.className = 'hero-split-toggle';
+  control.setAttribute('aria-label', 'Pause carousel');
+  control.dataset.state = 'playing';
+  media.append(control);
+
+  block.append(media);
+
+  const slides = [...track.children];
+  let current = 0;
+  let timer = null;
+
+  const show = (next) => {
+    slides[current].setAttribute('aria-hidden', 'true');
+    current = (next + slides.length) % slides.length;
+    slides[current].setAttribute('aria-hidden', 'false');
+  };
+
+  const play = () => {
+    if (timer) return;
+    timer = window.setInterval(() => show(current + 1), 4000);
+    control.dataset.state = 'playing';
+    control.setAttribute('aria-label', 'Pause carousel');
+  };
+
+  const pause = () => {
+    if (timer) { window.clearInterval(timer); timer = null; }
+    control.dataset.state = 'paused';
+    control.setAttribute('aria-label', 'Play carousel');
+  };
+
+  control.addEventListener('click', () => {
+    if (timer) pause();
+    else play();
+  });
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    play();
   } else {
-    block.classList.add('no-image');
+    pause();
   }
 }

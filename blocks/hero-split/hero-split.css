@@ -58,6 +58,7 @@
 }
 
 .hero-split-media {
+  position: relative;
   width: 100%;
 }
 
@@ -67,6 +68,73 @@
   width: 100%;
   height: auto;
   border-radius: 20px;
+}
+
+/* Carousel: cross-fading stack of slides */
+.hero-split-carousel {
+  position: relative;
+  display: grid;
+}
+
+.hero-split-slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.hero-split-slide[aria-hidden='false'] {
+  opacity: 1;
+}
+
+/* Play/pause control */
+.hero-split-toggle {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgb(0 0 0 / 55%);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.hero-split-toggle:hover,
+.hero-split-toggle:focus-visible {
+  background-color: rgb(0 0 0 / 80%);
+}
+
+/* pause icon (two bars) when playing */
+.hero-split-toggle[data-state='playing']::before,
+.hero-split-toggle[data-state='playing']::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 14px;
+  background: #fff;
+  transform: translateY(-50%);
+}
+
+.hero-split-toggle[data-state='playing']::before { left: 15px; }
+.hero-split-toggle[data-state='playing']::after { right: 15px; }
+
+/* play icon (triangle) when paused */
+.hero-split-toggle[data-state='paused']::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 52%;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 12px solid #fff;
+  transform: translate(-50%, -50%);
 }
 
 /* Text-only fallback spans full width */
