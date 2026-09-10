@@ -1,0 +1,169 @@
+/* carousel-stats — QuickBooks dark stats/testimonial carousel (autoplay, dots only) */
+
+.carousel-stats-container {
+  background-color: var(--brand-navy);
+  color: #fff;
+  margin: 0;
+  padding: 64px 0;
+}
+
+.carousel-stats-container .carousel-stats-wrapper {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.carousel-stats,
+.carousel-stats h1,
+.carousel-stats h2,
+.carousel-stats h3 {
+  color: #fff;
+}
+
+.carousel-stats .carousel-stats-slides-container {
+  position: relative;
+}
+
+.carousel-stats .carousel-stats-slides,
+.carousel-stats .carousel-stats-slide-indicators {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-stats .carousel-stats-slides {
+  display: flex;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overflow: scroll clip;
+}
+
+.carousel-stats .carousel-stats-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-stats .carousel-stats-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Testimonial: photo with quote + attribution overlaid at the bottom */
+.carousel-stats .carousel-stats-slide-image {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.carousel-stats .carousel-stats-slide-image picture,
+.carousel-stats .carousel-stats-slide-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.carousel-stats .carousel-stats-slide-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 60%) 0%, rgb(0 0 0 / 0%) 55%);
+}
+
+/* Content column: quote/attribution (when present) then stat callouts */
+.carousel-stats .carousel-stats-slide-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+.carousel-stats .carousel-stats-slide-content blockquote {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.carousel-stats .carousel-stats-slide-content blockquote + p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* Stat callouts: big number + supporting copy, on a tinted card */
+.carousel-stats .carousel-stats-slide-content h3 {
+  margin: 8px 0 0;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--brand-green);
+}
+
+.carousel-stats .carousel-stats-slide-content h3 + p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Dot indicators */
+.carousel-stats .carousel-stats-slide-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  padding: 24px 12px 0;
+  line-height: 0;
+}
+
+.carousel-stats .carousel-stats-slide-indicator button {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(255 255 255 / 35%);
+  transition: background-color 0.2s, width 0.2s;
+  cursor: pointer;
+}
+
+.carousel-stats .carousel-stats-slide-indicator button:disabled,
+.carousel-stats .carousel-stats-slide-indicator button:hover,
+.carousel-stats .carousel-stats-slide-indicator button:focus-visible {
+  background-color: #fff;
+}
+
+.carousel-stats .carousel-stats-slide-indicator button:disabled {
+  width: 24px;
+  border-radius: 5px;
+}
+
+@media (width >= 900px) {
+  .carousel-stats .carousel-stats-slide {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+  }
+
+  .carousel-stats .carousel-stats-slide-image {
+    min-height: 420px;
+  }
+
+  .carousel-stats .carousel-stats-slide-content {
+    justify-content: center;
+    padding: 32px;
+  }
+}

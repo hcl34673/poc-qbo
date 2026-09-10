@@ -10,6 +10,9 @@ import {
   loadSections,
   loadCSS,
   buildBlock,
+  readBlockConfig,
+  toClassName,
+  toCamelCase,
 } from './aem.js';
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
@@ -140,6 +143,66 @@ function decorateButtons(main) {
       em.replaceWith(a);
     }
   });
+
+  // QuickBooks: also promote standalone CTA links (sole content of their <p>,
+  // no strong/em formatting) to buttons, matching the site's conventions —
+  // "See plans & pricing" / "Get started" → primary; "Learn more" / "See all …"
+  // / "Explore …" → secondary.
+  main.querySelectorAll('p > a[href]').forEach((a) => {
+    if (a.classList.contains('button')) return;
+    const p = a.closest('p');
+    if (!p || p.textContent.trim() !== a.textContent.trim()) return;
+    if (a.querySelector('img')) return;
+    const label = a.textContent.trim().toLowerCase();
+    const isPrimary = /plans\s*&?\s*pricing|get started|buy now/.test(label);
+    const isSecondary = /learn more|see all|see integrations|explore/.test(label);
+    if (!isPrimary && !isSecondary) return;
+    p.className = 'button-wrapper';
+    a.className = `button ${isPrimary ? 'primary' : 'secondary'}`;
+  });
+}
+
+/**
+ * Applies section metadata: turns a `.section-metadata` block into section
+ * classes (Style tokens) / data attributes, then removes the block. The
+ * vendored aem.js decorateSections does not do this, so we handle it here
+ * before blocks are decorated (otherwise section-metadata loads as a block).
+ * @param {HTMLElement} main The main container element
+ */
+function decorateSectionMetadata(main) {
+  main.querySelectorAll('.section > div.section-metadata').forEach((sectionMeta) => {
+    const section = sectionMeta.closest('.section');
+    const meta = readBlockConfig(sectionMeta);
+    Object.keys(meta).forEach((key) => {
+      if (key === 'style') {
+        meta.style.split(',')
+          .map((style) => toClassName(style.trim()))
+          .filter((style) => style)
+          .forEach((style) => section.classList.add(style));
+      } else {
+        section.dataset[toCamelCase(key)] = meta[key];
+      }
+    });
+    const wrapper = sectionMeta.closest('.default-content-wrapper') || sectionMeta.parentElement;
+    sectionMeta.remove();
+    if (wrapper && wrapper.children.length === 0) wrapper.remove();
+  });
+}
+
+/**
+ * Tags the standalone "Intuit Intelligence goes deeper …" lead statement
+ * section so it can receive the large, centered brand treatment. Content-anchored
+ * (matches the opening words) so it's robust to section-order drift.
+ * @param {HTMLElement} main The main container element
+ */
+function decorateStatementSection(main) {
+  main.querySelectorAll('.section').forEach((section) => {
+    if (section.querySelector('.block, h1, h2, h3, h4, h5, h6')) return;
+    const lead = section.querySelector('p');
+    if (lead && /^intuit intelligence goes deeper/i.test(lead.textContent.trim())) {
+      section.classList.add('statement');
+    }
+  });
 }
 
 /**
@@ -151,6 +214,8 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  decorateSectionMetadata(main);
+  decorateStatementSection(main);
   decorateBlocks(main);
   decorateButtons(main);
 }

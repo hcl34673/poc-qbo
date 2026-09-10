@@ -1,0 +1,78 @@
+/* video-poster — structural layout only (brand tokens applied by design pass) */
+
+.video-poster {
+  text-align: center;
+  max-width: 900px;
+  margin: 24px auto;
+}
+
+.video-poster[data-embed-loaded='false']:not(.placeholder) {
+  /* reserve an approximate space to avoid extensive layout shifts */
+  aspect-ratio: 16 / 9;
+}
+
+.video-poster > div {
+  display: flex;
+  justify-content: center;
+}
+
+.video-poster video {
+  max-width: 100%;
+}
+
+.video-poster .video-poster-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+}
+
+.video-poster .video-poster-placeholder > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+}
+
+.video-poster[data-embed-loaded='true'] .video-poster-placeholder,
+.video-poster[data-embed-loaded='false'] .video-poster-placeholder + * {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+.video-poster .video-poster-placeholder picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-poster .video-poster-placeholder-play button {
+  position: relative;
+  display: block;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  outline: 2px solid;
+  padding: 0;
+}
+
+.video-poster .video-poster-placeholder-play button::before {
+  content: '';
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 0;
+  height: 24px;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 18px solid;
+  top: 50%;
+  left: calc(50% + 2px);
+  transform: translate(-50%, -50%);
+}
+
+.video-poster .video-poster-placeholder-play button:focus,
+.video-poster .video-poster-placeholder-play button:focus-visible {
+  outline-offset: 2px;
+}

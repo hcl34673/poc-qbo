@@ -1,0 +1,92 @@
+/* hero-split — QuickBooks split hero (text left, product image right) */
+
+.hero-split-container {
+  padding-top: var(--nav-height);
+}
+
+.hero-split-container .hero-split-wrapper {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.hero-split {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 24px;
+  align-items: flex-start;
+}
+
+.hero-split-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hero-split-content h1 {
+  margin: 0;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--brand-navy);
+}
+
+.hero-split-content h2,
+.hero-split-content p {
+  margin: 0;
+}
+
+.hero-split-content > p:first-of-type {
+  font-size: 18px;
+  line-height: 1.5;
+  color: rgb(0 0 0 / 80%);
+  max-width: 32em;
+}
+
+/* CTA buttons row */
+.hero-split-content .button-container {
+  display: inline-flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* trust / rating line (last paragraph) */
+.hero-split-content > p:last-child {
+  font-size: 14px;
+  color: rgb(0 0 0 / 65%);
+}
+
+.hero-split-media {
+  width: 100%;
+}
+
+.hero-split-media picture,
+.hero-split-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+/* Text-only fallback spans full width */
+.hero-split.no-image .hero-split-content {
+  max-width: 900px;
+}
+
+@media (width >= 900px) {
+  .hero-split {
+    flex-direction: row;
+    align-items: center;
+    gap: 56px;
+    padding: 64px 32px;
+  }
+
+  .hero-split-content {
+    flex: 1 1 46%;
+  }
+
+  .hero-split-media {
+    flex: 1 1 54%;
+  }
+}
