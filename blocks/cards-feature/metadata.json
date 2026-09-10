@@ -1,0 +1,15 @@
+{
+  "variantName": "cards-feature",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "regular",
+    "purpose": "feature-tiles",
+    "imagePattern": "icon-and-image"
+  },
+  "contentPattern": "Grid of repeating tiles, each with an optional category tag, bold stat/heading, short description, and optional icon/image.",
+  "usage": "Personalized feature/recommendation tiles arranged in a responsive grid.",
+  "options": [],
+  "memberVariantIds": ["cards-feature"]
+}

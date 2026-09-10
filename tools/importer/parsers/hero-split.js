@@ -60,14 +60,23 @@ export default function parse(element, { document }) {
   }
 
   // --- Image side ---
+  // The hero cycles through several brand photos. Capture each unique image so
+  // the block can render them as an autoplaying carousel. The source duplicates
+  // the set for looping, so de-dupe by src.
   const imageCell = [];
-  const heroImg = element.querySelector('[class*="HeroImageStack"] img[src]:not([src^="data:"])');
-  if (heroImg) {
+  const seen = new Set();
+  const heroImgs = Array.from(
+    element.querySelectorAll('[class*="HeroImageStack"] img[src]:not([src^="data:"])'),
+  );
+  heroImgs.forEach((heroImg) => {
+    const src = heroImg.getAttribute('src');
+    if (!src || seen.has(src)) return;
+    seen.add(src);
     const img = document.createElement('img');
-    img.src = heroImg.getAttribute('src');
+    img.src = src;
     img.alt = heroImg.getAttribute('alt') || '';
     imageCell.push(img);
-  }
+  });
 
   // Empty-block guard.
   if (textCell.length === 0 && imageCell.length === 0) {
