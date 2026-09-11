@@ -1,0 +1,103 @@
+/*
+ * cards-articles — "Recommended for you" related-article grid.
+ * Values extracted from source computed styles:
+ * quickbooks.intuit.com/r/cash-flow/what-is-cash-flow (QrcContentCard threegrids/small).
+ *
+ * Decorated EDS DOM (from blocks/cards-articles/cards-articles.js):
+ *   .cards-articles > ul > li
+ *     > .cards-articles-image (picture > img)
+ *     > .cards-articles-body   (title link, date; optional category tag)
+ */
+
+.cards-articles > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px 12px;      /* row 20px (card margin-bottom), col ~12px (flex-basis calc(33.33% - 8px)) */
+}
+
+.cards-articles > ul > li {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Image: 392x248 in source (aspect 49/31 ~= 1.58); object-fit cover; top corners 4px --- */
+.cards-articles .cards-articles-image {
+  line-height: 0;
+}
+
+.cards-articles .cards-articles-image img {
+  width: 100%;
+  aspect-ratio: 49 / 31;
+  object-fit: cover;
+  border-radius: 4px 4px 0 0;
+}
+
+/* --- Body: source item margins are 16px 0; render as an even 16px stack --- */
+.cards-articles .cards-articles-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0 0;
+  font-family: var(--body-font-family);
+}
+
+.cards-articles .cards-articles-body p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+/* Category tag — uppercase magenta accent (source rgb(221, 35, 102)).
+   Present in the source design; style is here in case the tag is authored. */
+.cards-articles .cards-articles-body .cards-articles-tag {
+  text-transform: uppercase;
+  color: #dd2366;
+}
+
+/* Article title — the whole card links via this link. Source color is black,
+   16px/24px, no underline. EDS auto-decorates a standalone <p><a> into
+   a.button inside p.button-container, so reset that back to plain text link. */
+.cards-articles .cards-articles-body p.button-container {
+  margin: 0;
+}
+
+.cards-articles .cards-articles-body a,
+.cards-articles .cards-articles-body a.button:any-link {
+  display: inline;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: #000;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: left;
+  text-decoration: none;
+  white-space: normal;
+  overflow: visible;
+}
+
+.cards-articles .cards-articles-body a:hover,
+.cards-articles .cards-articles-body a.button:hover {
+  text-decoration: underline;
+}
+
+/* Date — grey, last item (source rgb(107, 108, 114)) */
+.cards-articles .cards-articles-body p:last-child {
+  color: #6b6c72;
+}
+
+/* Desktop: 3-up grid (source layout) */
+@media (width >= 900px) {
+  .cards-articles > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

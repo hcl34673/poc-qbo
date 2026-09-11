@@ -1,0 +1,14 @@
+{
+  "variantName": "hero-article",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Article header with eyebrow label, title, author byline and publish/update dates, plus a header illustration image beside the title."
+  },
+  "contentPattern": {
+    "structure": "two cells in one row — a text cell (eyebrow paragraph, H1 title, byline and date paragraphs) and an image cell with the header illustration"
+  },
+  "usage": "Top-of-article header for editorial blog pages.",
+  "options": [],
+  "memberVariantIds": ["hero-article"]
+}

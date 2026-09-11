@@ -1,0 +1,14 @@
+{
+  "variantName": "table-financial",
+  "baseBlock": "table",
+  "canonicalModel": "collection",
+  "visualCharacteristics": {
+    "purpose": "A two-column financial data table (line item to value) with an optional bold caption, used for a cash flow statement example."
+  },
+  "contentPattern": {
+    "structure": "an optional single-cell caption row, followed by repeating two-cell rows of line item and value"
+  },
+  "usage": "Presenting a worked financial example such as a cash flow statement.",
+  "options": [],
+  "memberVariantIds": ["table-financial"]
+}

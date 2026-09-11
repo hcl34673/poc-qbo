@@ -1,0 +1,35 @@
+/*
+ * Brand design tokens — extracted from
+ * https://quickbooks.intuit.com/r/cash-flow/what-is-cash-flow/
+ *
+ * Source font "AvenirNext forINTUIT" is Intuit-proprietary and not available via
+ * Typekit/Google Fonts. "Nunito Sans" (Google Fonts) is used as the closest
+ * geometric-humanist substitute; the original name is kept first in the stack in
+ * case it is ever served locally.
+ */
+:root {
+  --heading-font-family: "AvenirNext forINTUIT", "Nunito Sans", helvetica, arial, sans-serif;
+  --body-font-family: "AvenirNext forINTUIT", "Nunito Sans", helvetica, arial, sans-serif;
+  --background-color: #fff;
+  --text-color: #21262a;
+  --link-color: #055393;
+  --link-hover-color: #033c6e;
+
+  /* QuickBooks brand accents */
+  --brand-green: #2ca01c;
+  --brand-green-dark: #108000;
+  --section-light-color: #f4f5f8;
+  --section-dark-color: #1a3b4d;
+  --callout-tip-bg: #e5f5e0;
+  --callout-takeaways-bg: #e5f5e0;
+  --section-padding: 40px;
+  --content-max-width: 1200px;
+  --reading-max-width: 740px;
+  --nav-height: 80px;
+  --heading-size-xxl: 40px;
+  --heading-size-xl: 30px;
+  --heading-size-l: 24px;
+  --heading-size-m: 20px;
+  --heading-size-s: 18px;
+  --heading-size-xs: 16px;
+}

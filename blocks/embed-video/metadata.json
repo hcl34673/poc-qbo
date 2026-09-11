@@ -1,0 +1,16 @@
+{
+  "variantName": "embed-video",
+  "baseBlock": "embed",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "An embedded YouTube video with a poster image and a click-to-play overlay; supports a vertical (portrait) aspect ratio."
+  },
+  "contentPattern": {
+    "structure": "one block with a video link and an optional poster image cell"
+  },
+  "usage": "Inline video embeds within an editorial article.",
+  "options": [
+    { "label": "Vertical", "class": "vertical" }
+  ],
+  "memberVariantIds": ["embed-video"]
+}

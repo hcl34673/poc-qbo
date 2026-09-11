@@ -1,0 +1,120 @@
+/*
+ * cards-feature — product-feature cards (icon + heading + description + CTAs).
+ * Values extracted from source computed styles:
+ *   https://quickbooks.intuit.com/r/cash-flow/what-is-cash-flow/
+ *   ([class*='RwCardsContainer_container'] -> RwCard grid)
+ * Decorated DOM: .cards-feature > ul > li > .cards-feature-icon + .cards-feature-body
+ * The grey section background + padding come from the section (style=grey).
+ */
+
+.cards-feature > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  justify-content: center;
+}
+
+/* Card = each li. White surface, rounded, soft shadow (from source RwCard). */
+.cards-feature > ul > li {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px 0 rgb(0 0 0 / 20%);
+  overflow: hidden;
+}
+
+/* Icon cell — 40px top padding, centered 60x60 icon. */
+.cards-feature .cards-feature-icon {
+  padding: 40px 0 0;
+  text-align: center;
+  line-height: 0;
+}
+
+.cards-feature .cards-feature-icon img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+/* Body cell — centered content, 40px side + bottom padding. */
+.cards-feature .cards-feature-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 40px 40px;
+}
+
+.cards-feature .cards-feature-body h3 {
+  margin: 16px 0;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  color: #393a3d;
+}
+
+.cards-feature .cards-feature-body p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-color);
+}
+
+/* CTA paragraphs (plain links, not EDS buttons) get 20px top spacing. */
+.cards-feature .cards-feature-body p:has(a) {
+  margin-top: 20px;
+}
+
+/* Primary filled CTA ("See plans") — first CTA link. */
+.cards-feature .cards-feature-body p:has(a) a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 4px;
+  background-color: #0d333f;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cards-feature .cards-feature-body p:has(a) a:hover,
+.cards-feature .cards-feature-body p:has(a) a:focus-visible {
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+/* Secondary text link ("Explore …") — the last CTA paragraph. */
+.cards-feature .cards-feature-body > p:has(a):last-child a {
+  display: inline;
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: #0d333f;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.cards-feature .cards-feature-body > p:has(a):last-child a:hover,
+.cards-feature .cards-feature-body > p:has(a):last-child a:focus-visible {
+  color: #0d333f;
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* 1 col mobile -> 3 fixed-width cards centered on desktop.
+   Source: each card is 342px (not stretched to fill the row); the 3-card group
+   is centered in the band rather than spanning full width. */
+@media (width >= 900px) {
+  .cards-feature > ul {
+    grid-template-columns: repeat(3, 342px);
+  }
+}

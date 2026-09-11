@@ -1,0 +1,14 @@
+{
+  "variantName": "columns-author",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "An author bio with a round photo beside the author name and a short biography paragraph."
+  },
+  "contentPattern": {
+    "structure": "one row with two cells — an image cell (round photo) and a body cell (author name and bio)"
+  },
+  "usage": "Author attribution block at the end of an article.",
+  "options": [],
+  "memberVariantIds": ["columns-author"]
+}

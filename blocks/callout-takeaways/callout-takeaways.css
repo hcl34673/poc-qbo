@@ -1,0 +1,64 @@
+/*
+ * callout-takeaways — "Key takeaways" summary box.
+ * Values extracted from getComputedStyle of the source .colored-box at
+ * https://quickbooks.intuit.com/r/cash-flow/what-is-cash-flow/ (1280px desktop):
+ *   background rgb(216,255,219) ~= --callout-takeaways-bg (#e5f5e0)
+ *   square corners (border-radius 0), no border, no shadow
+ *   max-width 740px (source content column), 40px horizontal padding
+ *   h2: 30px / 700 (== --heading-font-size-xl); list: 20px disc, padding-left 40px
+ *   visual spacing: box-top→h2 49px, h2→list 25px, list→box-bottom 44px
+ *
+ * The block sits in a section styled `mint-green` (same brand green), so the box
+ * reads as a contained reading-width green callout that seams with the band.
+ */
+
+.callout-takeaways {
+  max-width: 740px;
+  margin-inline: auto;
+  padding: 32px 24px;
+  background-color: var(--callout-takeaways-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* first/last content elements sit flush with the box padding
+   (.callout-takeaways-body is added by decorate()) */
+.callout-takeaways .callout-takeaways-body > :first-child {
+  margin-top: 0;
+}
+
+.callout-takeaways .callout-takeaways-body > :last-child {
+  margin-bottom: 0;
+}
+
+.callout-takeaways h2,
+.callout-takeaways h3 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.callout-takeaways ul {
+  margin: 0;
+  padding-left: 40px;
+  list-style: disc outside;
+  line-height: normal;
+}
+
+.callout-takeaways li {
+  margin: 0;
+  line-height: normal;
+}
+
+.callout-takeaways strong {
+  font-weight: 700;
+}
+
+@media (width >= 900px) {
+  .callout-takeaways {
+    padding: 44px 40px;
+  }
+}

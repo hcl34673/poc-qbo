@@ -1,0 +1,14 @@
+{
+  "variantName": "cards-feature",
+  "baseBlock": "cards",
+  "canonicalModel": "collection",
+  "visualCharacteristics": {
+    "purpose": "A grid of product-feature cards, each with an icon, heading and description."
+  },
+  "contentPattern": {
+    "structure": "repeating rows — one per feature — each with an icon cell and a body cell (heading + description)"
+  },
+  "usage": "Product-feature highlight grid within an editorial article.",
+  "options": [],
+  "memberVariantIds": ["cards-feature"]
+}

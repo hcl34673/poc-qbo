@@ -1,0 +1,14 @@
+{
+  "variantName": "callout-takeaways",
+  "baseBlock": "callout",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "A 'Key takeaways' summary box with a heading and a bulleted list, shown inside a light rounded box."
+  },
+  "contentPattern": {
+    "structure": "one cell containing a heading followed by a bulleted list of takeaways"
+  },
+  "usage": "Article summary of the main points, placed near the top of the content.",
+  "options": [],
+  "memberVariantIds": ["callout-takeaways"]
+}

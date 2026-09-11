@@ -1,0 +1,100 @@
+/*
+ * table-financial — two-column financial data table (line item -> value)
+ * with an optional bold caption above it.
+ *
+ * Decorated DOM (see table-financial.js):
+ *   .table-financial > table
+ *       > caption            (from a single-cell first row)
+ *       > tbody > tr > td    (col 1: line item, col 2: value)
+ *
+ * Brand-aligned: fonts/colors inherit from body + brand.css tokens.
+ * Source is a client-rendered Datawrapper embed (not extractable), so this is
+ * a clean, brand-consistent financial-table treatment rather than a pixel copy.
+ */
+
+.table-financial {
+  /* let a wide table scroll instead of overflowing on small screens */
+  overflow-x: auto;
+}
+
+.table-financial table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+/* Bold caption sitting above the table */
+.table-financial caption {
+  margin-bottom: 12px;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-m);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+  color: var(--text-color);
+}
+
+/* Data cells: comfortable padding + light row separators */
+.table-financial td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--section-light-color);
+  vertical-align: top;
+}
+
+/* Line-item (first) column */
+.table-financial td:first-child {
+  padding-left: 0;
+  color: var(--text-color);
+}
+
+/* Value (last) column: right-aligned, numerals kept tidy */
+.table-financial td:last-child {
+  padding-right: 0;
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Single-column rows (e.g. the raw embed link) shouldn't force right-align */
+.table-financial tr td:only-child {
+  text-align: left;
+  white-space: normal;
+  font-weight: inherit;
+}
+
+/* No trailing separator under the final row */
+.table-financial tr:last-child td {
+  border-bottom: none;
+}
+
+/* Links inside the table follow brand link colour */
+.table-financial a:any-link {
+  color: var(--link-color);
+}
+
+@media (width >= 900px) {
+  .table-financial table {
+    font-size: var(--body-font-size-m);
+  }
+
+  .table-financial caption {
+    font-size: var(--heading-font-size-l);
+    margin-bottom: 16px;
+  }
+
+  .table-financial td {
+    padding: 14px 20px;
+  }
+
+  .table-financial td:first-child {
+    padding-left: 0;
+  }
+
+  .table-financial td:last-child {
+    padding-right: 0;
+  }
+}
