@@ -379,7 +379,6 @@ main .section.dark a:any-link {
 }
 
 main .section.mint-green {
-  background-color: var(--callout-takeaways-bg);
   margin: 0;
   padding: 40px 0;
 }
