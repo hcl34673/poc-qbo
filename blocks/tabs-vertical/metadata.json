@@ -1,0 +1,15 @@
+{
+  "variantName": "tabs-vertical",
+  "baseBlock": "tabs",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "regular",
+    "purpose": "platform-tabs",
+    "imagePattern": "detail-panel-image"
+  },
+  "contentPattern": "Vertical list of many category labels on one side switching a detail panel with heading, paragraph, image, and CTA on the other.",
+  "usage": "Platform/feature explorer with a long vertical list of categories driving a detail panel.",
+  "options": [],
+  "memberVariantIds": ["tabs-vertical"]
+}

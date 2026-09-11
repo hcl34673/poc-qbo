@@ -1,0 +1,15 @@
+{
+  "variantName": "cards-logos",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "logo-wall",
+    "imagePattern": "logo-only"
+  },
+  "contentPattern": "Horizontal grid/strip of partner brand logos, each optionally linked.",
+  "usage": "Integrations/partner logo wall shown as an evenly spaced grid.",
+  "options": [],
+  "memberVariantIds": ["cards-logos"]
+}

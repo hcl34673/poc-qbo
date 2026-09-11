@@ -1,0 +1,15 @@
+{
+  "variantName": "widget-form",
+  "baseBlock": "widget",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "regular",
+    "purpose": "personalization-form",
+    "imagePattern": "none"
+  },
+  "contentPattern": "Interactive form with selectable business-need chips, radio options, and a continue button.",
+  "usage": "'Tell us about your business' personalization form/modal.",
+  "options": [],
+  "memberVariantIds": ["widget-form"]
+}

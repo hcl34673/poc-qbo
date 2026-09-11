@@ -1,0 +1,15 @@
+{
+  "variantName": "carousel-stats",
+  "baseBlock": "carousel",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "stats-testimonials",
+    "imagePattern": "full-bleed-background"
+  },
+  "contentPattern": "Full-width rotating slides, each a large stat callout or a testimonial quote over a background image, with prev/next controls and indicators.",
+  "usage": "Rotating band of statistics and customer testimonials on a dark background.",
+  "options": [],
+  "memberVariantIds": ["carousel-stats"]
+}

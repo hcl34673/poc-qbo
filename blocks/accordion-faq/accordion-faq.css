@@ -1,0 +1,93 @@
+/* accordion-faq — QuickBooks FAQ accordion (top-divider rows, medium toggle) */
+
+/* Two-column section: "FAQs" heading on the left, accordion items on the right.
+   The section (.accordion-faq-container) holds the heading's
+   .default-content-wrapper and the .accordion-faq-wrapper as siblings. */
+.accordion-faq-container .default-content-wrapper h2 {
+  margin: 0 0 24px;
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.accordion-faq {
+  max-width: unset;
+}
+
+@media (width >= 900px) {
+  .accordion-faq-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 88px;
+    align-items: start;
+    max-width: 1100px;
+    margin-inline: auto;
+    padding: 0 32px;
+  }
+
+  /* neutralize the per-wrapper centering from styles.css within the grid */
+  .accordion-faq-container > div {
+    max-width: unset;
+    margin: 0;
+    padding: 0;
+  }
+
+  .accordion-faq-container .default-content-wrapper h2 {
+    position: sticky;
+    top: calc(var(--nav-height) + 24px);
+  }
+}
+
+.accordion-faq details {
+  border-top: 1px solid rgb(0 0 0 / 20%);
+}
+
+.accordion-faq details:last-of-type {
+  border-bottom: 1px solid rgb(0 0 0 / 20%);
+}
+
+.accordion-faq details p {
+  margin-bottom: 0.8em;
+}
+
+.accordion-faq details summary {
+  position: relative;
+  padding: 24px 46px 24px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--brand-navy);
+  transition: color 0.2s;
+}
+
+.accordion-faq details summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-faq details summary::after {
+  content: '';
+  position: absolute;
+  top: 44%;
+  right: 8px;
+  transform: translateY(-50%) rotate(135deg);
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--brand-blue);
+  border-width: 0 2px 2px 0;
+  transition: transform 0.2s;
+}
+
+.accordion-faq details[open] summary::after {
+  transform: translateY(-50%) rotate(-135deg);
+}
+
+.accordion-faq details .accordion-faq-item-body {
+  padding: 0 46px 24px 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.accordion-faq details .accordion-faq-item-body a {
+  color: var(--link-color);
+}

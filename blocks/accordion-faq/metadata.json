@@ -1,0 +1,15 @@
+{
+  "variantName": "accordion-faq",
+  "baseBlock": "accordion",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "regular",
+    "purpose": "faq",
+    "imagePattern": "none"
+  },
+  "contentPattern": "List of expandable question-and-answer pairs.",
+  "usage": "Frequently asked questions rendered as expandable accordion items.",
+  "options": [],
+  "memberVariantIds": ["accordion-faq"]
+}

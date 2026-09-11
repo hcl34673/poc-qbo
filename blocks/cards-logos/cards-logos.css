@@ -1,0 +1,60 @@
+/* cards-logos — autoplaying logo marquee */
+
+.cards-logos .cards-logos-viewport {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.cards-logos .cards-logos-track {
+  list-style: none;
+  margin: 0;
+  padding: 0 40px 0 0;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 40px;
+  animation: cards-logos-scroll 45s linear infinite;
+}
+
+.cards-logos .cards-logos-viewport:hover .cards-logos-track {
+  animation-play-state: paused;
+}
+
+.cards-logos-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards-logos-item a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards-logos-item picture,
+.cards-logos-item img {
+  display: block;
+  width: auto;
+  height: 40px;
+  max-width: none;
+  object-fit: contain;
+}
+
+@keyframes cards-logos-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cards-logos .cards-logos-track {
+    animation: none;
+  }
+
+  .cards-logos .cards-logos-viewport {
+    overflow-x: auto;
+  }
+}

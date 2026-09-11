@@ -1,0 +1,15 @@
+{
+  "variantName": "hero-banner",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "closing-banner",
+    "imagePattern": "optional-background"
+  },
+  "contentPattern": "Centered heading with a single supporting CTA on a plain band.",
+  "usage": "Closing 'Trusted by millions' style call-to-action banner.",
+  "options": [],
+  "memberVariantIds": ["hero-banner"]
+}

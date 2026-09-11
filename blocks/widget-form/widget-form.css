@@ -1,0 +1,65 @@
+/* widget-form — structural layout only (brand tokens applied by design pass) */
+
+.widget-form .widget-form-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 640px;
+}
+
+.widget-form .widget-form-text > *:first-child {
+  margin-top: 0;
+}
+
+.widget-form .widget-form-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.widget-form .widget-form-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #dadada;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.widget-form .widget-form-chip input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.widget-form .widget-form-chip:has(input:checked) {
+  border-color: currentcolor;
+  font-weight: bold;
+}
+
+.widget-form .widget-form-radios {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.widget-form .widget-form-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.widget-form .widget-form-radio input {
+  margin: 0;
+}
+
+@media (width >= 600px) {
+  .widget-form .widget-form-radios {
+    flex-flow: row wrap;
+    gap: 24px;
+  }
+}

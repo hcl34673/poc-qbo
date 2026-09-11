@@ -1,0 +1,16 @@
+{
+  "variantName": "hero-split",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "hero",
+    "imagePattern": "side-image",
+    "layout": "text-left / image-right split"
+  },
+  "contentPattern": "Heading + supporting paragraph + two CTA buttons + trust/rating line on one side, product image on the other.",
+  "usage": "Above-the-fold intro banner with text on one side and a product image on the other, on a light background.",
+  "options": [],
+  "memberVariantIds": ["hero-split"]
+}

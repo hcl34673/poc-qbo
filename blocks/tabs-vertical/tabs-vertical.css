@@ -1,0 +1,171 @@
+/* tabs-vertical — QuickBooks "Everything on one platform" (left rail + detail panel) */
+
+.tabs-vertical {
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.tabs-vertical .tabs-vertical-list {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 24px;
+  scrollbar-width: none;
+}
+
+.tabs-vertical .tabs-vertical-list::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs-vertical .tabs-vertical-list button {
+  flex: 0 0 max-content;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  padding: 12px 8px;
+  background-color: transparent;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  opacity: 0.7;
+  transition: opacity 0.2s, border-color 0.2s, font-weight 0.2s;
+}
+
+.tabs-vertical .tabs-vertical-list button p {
+  margin: 0;
+}
+
+.tabs-vertical .tabs-vertical-list button[aria-selected='true'] {
+  border-bottom-color: var(--brand-blue);
+  font-weight: 700;
+  opacity: 1;
+  cursor: initial;
+}
+
+.tabs-vertical .tabs-vertical-panel {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.tabs-vertical .tabs-vertical-panel[aria-hidden='true'] {
+  display: none !important;
+}
+
+/* Text column: heading + bullet list + CTA */
+.tabs-vertical .tabs-vertical-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs-vertical .tabs-vertical-text > *:first-child {
+  margin-top: 0;
+}
+
+.tabs-vertical .tabs-vertical-panel h3 {
+  margin: 0 0 16px;
+  font-size: 28px;
+}
+
+.tabs-vertical .tabs-vertical-panel ul {
+  margin: 0 0 20px;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+/* Panel CTA is a tertiary link (blue text + arrow), never a bordered button */
+.tabs-vertical .tabs-vertical-text a,
+.tabs-vertical .tabs-vertical-text a.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--link-color);
+  font-weight: 600;
+}
+
+.tabs-vertical .tabs-vertical-text a::after {
+  content: '\203A'; /* › */
+  font-weight: 400;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.tabs-vertical .tabs-vertical-text a:hover {
+  color: var(--link-hover-color);
+  background: transparent;
+  text-decoration: underline;
+}
+
+/* Media column: the tab's image */
+.tabs-vertical .tabs-vertical-media {
+  line-height: 0;
+}
+
+.tabs-vertical .tabs-vertical-panel picture,
+.tabs-vertical .tabs-vertical-panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+@media (width >= 900px) {
+  .tabs-vertical {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  .tabs-vertical .tabs-vertical-list {
+    flex-direction: column;
+    flex: 0 0 220px;
+    gap: 0;
+    overflow-x: visible;
+    margin-bottom: 0;
+  }
+
+  .tabs-vertical .tabs-vertical-list button {
+    white-space: normal;
+    padding: 14px 0 14px 16px;
+    border-bottom: none;
+    border-left: 3px solid transparent;
+  }
+
+  .tabs-vertical .tabs-vertical-list button[aria-selected='true'] {
+    border-bottom-color: transparent;
+    border-left-color: var(--brand-blue);
+  }
+
+  .tabs-vertical .tabs-vertical-panel {
+    flex: 1 1 auto;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+  }
+
+  /* Explicit placement so text is always the left column and the image the
+     right column, regardless of source order or auto-placement. */
+  .tabs-vertical .tabs-vertical-text {
+    grid-column: 1;
+  }
+
+  .tabs-vertical .tabs-vertical-media {
+    grid-column: 2;
+    min-width: 0;
+  }
+}

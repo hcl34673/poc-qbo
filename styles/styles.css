@@ -11,46 +11,39 @@
  */
 
 :root {
-  /* colors */
+  /* colors — QuickBooks / Intuit brand palette */
   --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --light-color: #f4f5f8;
+  --dark-color: #0d0031; /* Intuit deep navy */
+  --text-color: #000;
+  --link-color: #236cff; /* Intuit blue */
+  --link-hover-color: #0555d4;
 
-  /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  /* brand accents */
+  --brand-blue: #236cff;
+  --brand-navy: #0d0031;
+  --brand-green: #c9ff98;
+
+  /* fonts — QuickBooks uses proprietary Tally/Tally Display (CORS-locked),
+     matched here with an Avenir-like humanist sans fallback stack */
+  --body-font-family: 'Avenir Next', avenir, 'Segoe UI', helvetica, arial, sans-serif;
+  --heading-font-family: var(--body-font-family);
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 18px;
+  --body-font-size-s: 16px;
+  --body-font-size-xs: 14px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
+  --heading-font-size-xxl: 56px;
+  --heading-font-size-xl: 40px;
   --heading-font-size-l: 34px;
   --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  --heading-font-size-s: 22px;
+  --heading-font-size-xs: 18px;
 
   /* nav height */
-  --nav-height: 64px;
-}
-
-/* fallback fonts */
-@font-face {
-  font-family: roboto-condensed-fallback;
-  size-adjust: 88.82%;
-  src: local('Arial');
-}
-
-@font-face {
-  font-family: roboto-fallback;
-  size-adjust: 99.529%;
-  src: local('Arial');
+  --nav-height: 80px;
 }
 
 @media (width >= 900px) {
@@ -61,10 +54,10 @@
     --body-font-size-xs: 14px;
 
     /* heading sizes */
-    --heading-font-size-xxl: 45px;
-    --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
+    --heading-font-size-xxl: 64px;
+    --heading-font-size-xl: 44px;
+    --heading-font-size-l: 34px;
+    --heading-font-size-m: 24px;
     --heading-font-size-s: 20px;
     --heading-font-size-xs: 18px;
   }
@@ -107,8 +100,10 @@ h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--brand-navy);
   scroll-margin: 40px;
 }
 
@@ -170,6 +165,12 @@ p.button-wrapper {
   margin: 12px 0;
 }
 
+/* Standalone CTAs that are default content (between blocks) are centered,
+   matching the QuickBooks section layout. */
+main .default-content-wrapper p.button-wrapper {
+  text-align: center;
+}
+
 a.button:any-link,
 button.button {
   box-sizing: border-box;
@@ -177,18 +178,20 @@ button.button {
   align-items: center;
   justify-content: center;
   max-width: 100%;
+  min-height: 48px;
   margin: 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
+  border-radius: 4px;
+  padding: 0 28px;
   font: inherit;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.25;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 a.button[aria-disabled="true"],
@@ -199,18 +202,19 @@ button.button:disabled {
 
 a.button.primary,
 button.button.primary {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: var(--background-color);
+  border-color: var(--brand-blue);
+  background-color: var(--brand-blue);
+  color: #fff;
 }
 
 a.button.primary:hover,
 a.button.primary:focus-visible,
 button.button.primary:hover,
 button.button.primary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--dark-color);
-  color: var(--light-color);
+  border-color: var(--link-hover-color);
+  background-color: var(--link-hover-color);
+  color: #fff;
+  text-decoration: none;
 }
 
 a.button.primary[aria-disabled="true"],
@@ -235,9 +239,10 @@ a.button.secondary:hover,
 a.button.secondary:focus-visible,
 button.button.secondary:hover,
 button.button.secondary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--light-color);
-  color: var(--dark-color);
+  border-color: var(--text-color);
+  background-color: rgb(0 0 0 / 5%);
+  color: var(--text-color);
+  text-decoration: none;
 }
 
 a.button.secondary[aria-disabled="true"],
@@ -317,9 +322,90 @@ main > .section:first-of-type {
 }
 
 /* section metadata */
-main .section.light,
-main .section.highlight {
+main .section.light {
   background-color: var(--light-color);
   margin: 0;
   padding: 40px 0;
 }
+
+/* highlight — "Key takeaways" tinted callout box, constrained to content width */
+main .section.highlight {
+  margin: 32px auto;
+  padding: 0;
+}
+
+main .section.highlight > div {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 28px 32px;
+  border-radius: 16px;
+  background-color: var(--light-color);
+  border: 1px solid rgb(0 0 0 / 8%);
+}
+
+/* grey — full-width tinted band ("Explore what you can do with QuickBooks") */
+main .section.grey {
+  background-color: var(--light-color);
+  margin: 0;
+  padding: 56px 0;
+}
+
+/* dark section (e.g. stats/testimonials carousel, platform tabs) */
+main .section.dark {
+  background-color: var(--brand-navy);
+  color: #fff;
+  margin: 0;
+  padding: 64px 0;
+}
+
+main .section.dark h1,
+main .section.dark h2,
+main .section.dark h3,
+main .section.dark h4,
+main .section.dark h5,
+main .section.dark h6 {
+  color: #fff;
+}
+
+main .section.dark a:any-link {
+  color: #fff;
+}
+
+/* statement section ("Intuit Intelligence goes deeper …") — large centered lead */
+main .section.statement {
+  padding: 56px 0;
+}
+
+main .section.statement .default-content-wrapper {
+  max-width: 1000px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* the lead statement paragraph reads as an h1 */
+main .section.statement p:first-child {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--brand-navy);
+  letter-spacing: -0.02em;
+}
+
+/* Learn more CTA: centered blue button */
+main .section.statement .button-wrapper {
+  margin-top: 24px;
+  text-align: center;
+}
+
+main .section.statement a.button {
+  border-color: var(--brand-blue);
+  background-color: var(--brand-blue);
+  color: #fff;
+}
+
+main .section.statement a.button:hover {
+  border-color: var(--link-hover-color);
+  background-color: var(--link-hover-color);
+  color: #fff;
+}
+

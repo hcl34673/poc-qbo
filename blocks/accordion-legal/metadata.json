@@ -1,0 +1,15 @@
+{
+  "variantName": "accordion-legal",
+  "baseBlock": "accordion",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "legal-disclaimer",
+    "imagePattern": "none"
+  },
+  "contentPattern": "A toggle link expanding to reveal legal/disclaimer fine print in small type.",
+  "usage": "Collapsible pricing disclaimer / legal fine print at the bottom of a page.",
+  "options": [],
+  "memberVariantIds": ["accordion-legal"]
+}

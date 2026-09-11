@@ -1,0 +1,148 @@
+{
+  "metadata": {
+    "projectType": "da"
+  },
+  "templates": [
+    {
+      "name": "home",
+      "urls": [
+        "https://quickbooks.intuit.com/"
+      ],
+      "representativeUrl": "https://quickbooks.intuit.com/",
+      "description": "QuickBooks homepage",
+      "urlPattern": "/",
+      "blocks": [
+        {
+          "name": "hero-split",
+          "instances": ["[class*=\"HomepageHero-bleedWrapper\"]"]
+        },
+        {
+          "name": "cards-feature",
+          "instances": ["[class*=\"PersonalizedCards-animatedTiles\"]", "[class*=\"PersonalizedCards\"]"]
+        },
+        {
+          "name": "tabs-deck",
+          "instances": ["[class*=\"QRCardsAnimated-root\"]", "[class*=\"QRCardsAnimated\"]"]
+        },
+        {
+          "name": "tabs-vertical",
+          "instances": ["[class*=\"TabbedDetailPanel-tabbed-detail-panel-container\"]", "[class*=\"TabbedPanel-tabbed-panel-container\"]"]
+        },
+        {
+          "name": "carousel-stats",
+          "instances": ["[class*=\"FullWidthCarousel-sp-fwc\"]", "[class*=\"FullWidthCarousel\"]"]
+        },
+        {
+          "name": "video-poster",
+          "instances": ["video.facade-teaser", "[class*=\"facade-teaser\"]"]
+        },
+        {
+          "name": "cards-logos",
+          "instances": ["[class*=\"InfiniteImageSlider-iis-root\"]", "[class*=\"InfiniteImageSlider\"]"]
+        },
+        {
+          "name": "accordion-faq",
+          "instances": ["[class*=\"RwAccordion_accordion\"]"]
+        },
+        {
+          "name": "hero-banner",
+          "instances": ["[class*=\"Background-contentWrapper\"]"]
+        },
+        {
+          "name": "accordion-legal",
+          "instances": ["[class*=\"RwDisclaimer_rwDisclaimer\"]"]
+        }
+      ],
+      "sections": [
+        {
+          "id": "rc12",
+          "name": "hero",
+          "selector": ["#main > div:nth-of-type(12)"],
+          "style": null,
+          "blocks": ["hero-split"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc16",
+          "name": "recommended-cards",
+          "selector": ["#main > div:nth-of-type(16)"],
+          "style": null,
+          "blocks": ["cards-feature"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc20",
+          "name": "statement",
+          "selector": ["#main > div:nth-of-type(20)"],
+          "style": null,
+          "blocks": [],
+          "defaultContent": []
+        },
+        {
+          "id": "rc21",
+          "name": "get-it-all-done-tabs",
+          "selector": ["#main > div:nth-of-type(21)"],
+          "style": null,
+          "blocks": ["tabs-deck"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc22",
+          "name": "platform-tabs",
+          "selector": ["#main > div:nth-of-type(22)"],
+          "style": null,
+          "blocks": ["tabs-vertical"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc23",
+          "name": "stats-testimonials-carousel",
+          "selector": ["#main > div:nth-of-type(23)"],
+          "style": null,
+          "blocks": ["carousel-stats"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc24",
+          "name": "sizzle-video",
+          "selector": ["#main > div:nth-of-type(24)"],
+          "style": null,
+          "blocks": ["video-poster"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc25",
+          "name": "integrations",
+          "selector": ["#main > div:nth-of-type(25)"],
+          "style": null,
+          "blocks": ["cards-logos"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc26",
+          "name": "faqs",
+          "selector": ["#main > div:nth-of-type(26)"],
+          "style": null,
+          "blocks": ["accordion-faq"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc27",
+          "name": "trusted-banner",
+          "selector": ["#main > div:nth-of-type(27)"],
+          "style": null,
+          "blocks": ["hero-banner"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc28",
+          "name": "pricing-disclaimer",
+          "selector": ["#main > div:nth-of-type(28)"],
+          "style": null,
+          "blocks": ["accordion-legal"],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

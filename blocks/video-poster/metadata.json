@@ -1,0 +1,15 @@
+{
+  "variantName": "video-poster",
+  "baseBlock": "video",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "regular",
+    "purpose": "video",
+    "imagePattern": "poster-with-play"
+  },
+  "contentPattern": "A single embedded video referenced by a link, shown as a poster image with a play button until activated.",
+  "usage": "Sizzle-reel or feature video with a poster image and click-to-play behavior.",
+  "options": [],
+  "memberVariantIds": ["video-poster"]
+}
