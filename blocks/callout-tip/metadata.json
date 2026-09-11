@@ -1,0 +1,16 @@
+{
+  "variantName": "callout-tip",
+  "baseBlock": "callout",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "A highlighted tip callout with a leading icon (lightbulb by default, exclamation for the alert option) and short body paragraphs."
+  },
+  "contentPattern": {
+    "structure": "one row — an optional icon cell followed by a body cell with one or more short paragraphs"
+  },
+  "usage": "Recurring inline tip/alert notes throughout an editorial article.",
+  "options": [
+    { "label": "Alert", "class": "alert" }
+  ],
+  "memberVariantIds": ["callout-tip"]
+}

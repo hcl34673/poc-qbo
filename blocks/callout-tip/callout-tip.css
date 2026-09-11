@@ -1,0 +1,60 @@
+/*
+ * callout-tip — highlighted tip/note box with a leading green icon and short
+ * body text. Design extracted from the source .colored-box (lightbulb tip and
+ * exclamation "alert" variants) on quickbooks.intuit.com.
+ *
+ * Source model: a light-green block with a 100x100 icon FLOATED LEFT; the body
+ * text wraps to the right of the icon and continues beneath it. No border-radius
+ * and no box-shadow on the source box (verified 0 at every ancestor level).
+ */
+
+.callout-tip {
+  display: flow-root;                 /* establish a BFC so the floated icon is contained */
+  max-width: 740px;                   /* source computed max-width */
+  margin: 0;
+  padding: 20px 40px;                 /* source: 0 40px horizontal + 20px vertical from <p> margins */
+  background-color: var(--callout-tip-bg); /* light green; source sampled rgb(216, 255, 219) */
+  color: #000;                        /* source body text is pure black */
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Icon cell — floated left so body text wraps around it (matches source img float:left) */
+.callout-tip .callout-tip-icon {
+  float: left;
+  margin: 0 15px 0 0;                 /* source icon margin: 0 15px 0 0 */
+  line-height: 0;
+}
+
+/* Neutralize any <p> EDS may inject around the bare icon image */
+.callout-tip .callout-tip-icon p {
+  margin: 0;
+  line-height: 0;
+}
+
+.callout-tip .callout-tip-icon img {
+  display: block;
+  width: 100px;                       /* source icon 100x100 */
+  height: 100px;
+  object-fit: contain;                /* square SVG => equivalent to source object-fit: fill */
+}
+
+/* Body text — source paragraph margin 20px 0 */
+.callout-tip .callout-tip-body p {
+  margin: 20px 0;
+}
+
+/* Collapse the outer body margins into the box padding (20px each side already) */
+.callout-tip .callout-tip-body > :first-child {
+  margin-top: 0;
+}
+
+.callout-tip .callout-tip-body > :last-child {
+  margin-bottom: 0;
+}
+
+/*
+ * alert variant (.callout-tip.alert) — the source exclamation-icon box has
+ * computed styles identical to the lightbulb tip; only the authored icon SVG
+ * differs, so the base rules above already style it correctly.
+ */

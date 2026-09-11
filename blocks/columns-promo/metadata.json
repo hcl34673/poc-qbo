@@ -1,0 +1,14 @@
+{
+  "variantName": "columns-promo",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "A promotional band of equal columns, each with a heading, description, and a call-to-action button, on a dark background."
+  },
+  "contentPattern": {
+    "structure": "one row with one cell per column; each cell has a heading, description, and a link rendered as a button"
+  },
+  "usage": "'Looking for something else?' promotional band near the end of an article.",
+  "options": [],
+  "memberVariantIds": ["columns-promo"]
+}

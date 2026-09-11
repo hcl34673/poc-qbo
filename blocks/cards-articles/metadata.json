@@ -1,0 +1,14 @@
+{
+  "variantName": "cards-articles",
+  "baseBlock": "cards",
+  "canonicalModel": "collection",
+  "visualCharacteristics": {
+    "purpose": "A grid of related-article cards, each with an image, category tag, title and date, linking to another article."
+  },
+  "contentPattern": {
+    "structure": "repeating rows — one per card — each with an image cell and a body cell (tag, title link, date)"
+  },
+  "usage": "'Recommended for you' related-article grid at the end of an article.",
+  "options": [],
+  "memberVariantIds": ["cards-articles"]
+}

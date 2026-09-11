@@ -1,0 +1,12 @@
+{
+  "type": "da",
+  "sites": {
+    "poc-qbo": {
+      "previewOrg": "hcl34673",
+      "previewSite": "poc-qbo",
+      "contentHostUrl": "https://content.da.live/hcl34673/poc-qbo/",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json",
+      "botProtected": true
+    }
+  }
+}

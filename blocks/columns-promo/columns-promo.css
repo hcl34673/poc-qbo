@@ -1,0 +1,87 @@
+/**
+ * columns-promo — "Looking for something else?" promotional band.
+ *
+ * Design extracted from the source section [class*='Container_grey01'] on
+ * https://quickbooks.intuit.com/r/cash-flow/what-is-cash-flow/
+ *
+ * The band background (dark), white body text and white links are provided by
+ * the `main .section.dark` rules in styles.css. This file styles only the block:
+ * the 3-column layout, the promo headings/descriptions, and the outlined CTA.
+ */
+
+/* Layout: stacked on mobile, three equal columns on desktop. */
+.columns-promo > div {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.columns-promo .columns-promo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Promo column heading (source: h3 28px / 700 / line-height 36px, white). */
+.columns-promo .columns-promo-col h3 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #fff;
+}
+
+/* Promo description (source: 16px / 400, white, 20px space before the CTA). */
+.columns-promo .columns-promo-col p {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #fff;
+}
+
+/* Push the CTA to the bottom so buttons align across unequal-length copy. */
+.columns-promo .columns-promo-col p:last-child {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+/*
+ * CTA "See how it works" — outlined white button.
+ * Source: transparent background, 2px solid #fff border, 4px radius,
+ * white 16px/600 text, horizontal padding 28px. Overrides the pill-shaped
+ * EDS base `a.button` from styles.css.
+ */
+.columns-promo .columns-promo-col a.button:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.5em 28px;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  text-decoration: none;
+}
+
+.columns-promo .columns-promo-col a.button:any-link:hover,
+.columns-promo .columns-promo-col a.button:any-link:focus-visible {
+  background-color: #fff;
+  color: var(--section-dark-color);
+  text-decoration: none;
+}
+
+@media (width >= 900px) {
+  .columns-promo > div {
+    flex-direction: row;
+    gap: 40px;
+  }
+
+  .columns-promo .columns-promo-col {
+    flex: 1;
+  }
+}

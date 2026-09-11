@@ -1,0 +1,105 @@
+/*
+ * columns-author — author bio: round photo at left, author name link + short
+ * biography paragraph at right.
+ *
+ * Values extracted from source computed styles:
+ *   https://quickbooks.intuit.com/r/cash-flow/what-is-cash-flow/
+ *   [class*='AuthorBio_authorBioContainer']
+ * Container: display:flex; flex-direction:row.
+ * Photo: 120x120, round (border-radius:100% + overflow:hidden), object-fit:cover,
+ *        32px gap to text.
+ * Name link: #dd2366, 16px/24px, weight 500; name block margin-bottom 20px.
+ * Bio: 16px/24px, weight 400, black.
+ */
+
+.columns-author > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+/* --- Photo (round, fixed 120x120) --- */
+.columns-author .columns-author-photo {
+  flex: 0 0 auto;
+  width: 120px;
+  height: 120px;
+  line-height: 0;
+}
+
+.columns-author .columns-author-photo picture {
+  display: block;
+  width: 120px;
+  height: 120px;
+}
+
+.columns-author .columns-author-photo img {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+/* --- Bio text column --- */
+.columns-author .columns-author-bio {
+  flex: 1 1 auto;
+}
+
+.columns-author .columns-author-bio > :first-child {
+  margin-top: 0;
+}
+
+.columns-author .columns-author-bio > :last-child {
+  margin-bottom: 0;
+}
+
+/* Biography paragraph — source has a flat 20px gap under the name (no extra
+ * top margin), so neutralize the global <p> top margin. */
+.columns-author .columns-author-bio p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--text-color);
+}
+
+.columns-author .columns-author-bio p + p {
+  margin-top: 12px;
+}
+
+/* Author name line — spacing below name before bio.
+ * NOTE: the authored name is <p><strong><a></a></strong></p>, which EDS
+ * decorateButtons() rewrites into <p class="button-wrapper"><a class="button
+ * primary">. We reset that button chrome so the name renders as the source's
+ * plain accent link (#dd2366, weight 500), not a green pill. */
+.columns-author .columns-author-bio > p:first-child,
+.columns-author .columns-author-bio > p.button-wrapper {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.columns-author .columns-author-bio a.button:any-link,
+.columns-author .columns-author-bio > p:first-child a:any-link {
+  display: inline;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  color: #dd2366;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration: none;
+  white-space: normal;
+  overflow: visible;
+}
+
+.columns-author .columns-author-bio a.button:hover,
+.columns-author .columns-author-bio > p:first-child a:hover {
+  background-color: transparent;
+  color: #dd2366;
+  text-decoration: underline;
+}
