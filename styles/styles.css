@@ -322,11 +322,32 @@ main > .section:first-of-type {
 }
 
 /* section metadata */
-main .section.light,
-main .section.highlight {
+main .section.light {
   background-color: var(--light-color);
   margin: 0;
   padding: 40px 0;
+}
+
+/* highlight — "Key takeaways" tinted callout box, constrained to content width */
+main .section.highlight {
+  margin: 32px auto;
+  padding: 0;
+}
+
+main .section.highlight > div {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 28px 32px;
+  border-radius: 16px;
+  background-color: var(--light-color);
+  border: 1px solid rgb(0 0 0 / 8%);
+}
+
+/* grey — full-width tinted band ("Explore what you can do with QuickBooks") */
+main .section.grey {
+  background-color: var(--light-color);
+  margin: 0;
+  padding: 56px 0;
 }
 
 /* dark section (e.g. stats/testimonials carousel, platform tabs) */

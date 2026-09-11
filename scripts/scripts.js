@@ -170,7 +170,10 @@ function decorateButtons(main) {
  * @param {HTMLElement} main The main container element
  */
 function decorateSectionMetadata(main) {
-  main.querySelectorAll('.section > div.section-metadata').forEach((sectionMeta) => {
+  // decorateSections wraps every top-level <div> child, so the section-metadata
+  // block sits at `.section > div > div.section-metadata` — match it as a
+  // descendant rather than a direct child.
+  main.querySelectorAll('.section div.section-metadata').forEach((sectionMeta) => {
     const section = sectionMeta.closest('.section');
     const meta = readBlockConfig(sectionMeta);
     Object.keys(meta).forEach((key) => {
