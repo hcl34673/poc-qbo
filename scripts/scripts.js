@@ -142,6 +142,50 @@ function decorateButtons(main) {
   });
 }
 
+function applyTextStyles(main) {
+  const styledSections = main.querySelectorAll('[data-text-styles]');
+  const styleClasses = [
+    'heading-font-size-l',
+    'heading-font-size-m',
+    'heading-font-size-s',
+    'heading-font-size-xs',
+  ];
+  const normalizeText = (text) => text
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/([,.;:!?])\s+/g, '$1');
+
+  styledSections.forEach((section) => {
+    let mappings = [];
+    try {
+      mappings = JSON.parse(section.getAttribute('data-text-styles'));
+    } catch {
+      // Ignore invalid section metadata and leave the section unchanged.
+    }
+
+    if (!Array.isArray(mappings)) return;
+
+    mappings.forEach((mapping) => {
+      if (!mapping || typeof mapping !== 'object') return;
+      const { text, className } = mapping;
+      if (typeof text !== 'string' || !styleClasses.includes(className)) return;
+      const candidates = Array.from(section.querySelectorAll('*'))
+        .filter((element) => normalizeText(element.textContent) === normalizeText(text));
+      const paragraphs = candidates.filter((element) => element.tagName === 'P');
+      const targets = paragraphs.length ? paragraphs : candidates.filter((element) => (
+        !Array.from(element.children).some((child) => (
+          normalizeText(child.textContent) === normalizeText(text)
+        ))
+      ));
+
+      targets.forEach((target) => {
+        target.classList.remove(...styleClasses, 'highlight');
+        target.classList.add(className);
+      });
+    });
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -151,6 +195,7 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  applyTextStyles(main);
   decorateBlocks(main);
   decorateButtons(main);
 }

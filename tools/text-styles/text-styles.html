@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Styles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+
+  <script src="https://da.live/nx/public/sl/components.js" type="module"></script>
+
+  <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
+
+  <script src="/tools/text-styles/text-styles.js" type="module"></script>
+
+  <link rel="stylesheet" href="/tools/text-styles/text-styles.css">
+</head>
+
+<body>
+  <main id="app">
+    <p class="status">
+      Select text in the document, then choose a style.
+    </p>
+
+    <label class="style-picker" for="style-select">
+      Font size
+      <select id="style-select" name="style">
+        <option value="heading-font-size-l">Large (30px)</option>
+        <option value="heading-font-size-m">Medium (24px)</option>
+        <option value="heading-font-size-s">Small (20px)</option>
+        <option value="heading-font-size-xs">Extra small (18px)</option>
+      </select>
+    </label>
+
+    <sl-button id="apply-style" variant="primary">Apply style</sl-button>
+
+    <p id="selection" class="selection"></p>
+  </main>
+</body>
+</html>

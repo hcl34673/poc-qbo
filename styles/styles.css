@@ -119,6 +119,26 @@ h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
 
+.heading-font-size-l {
+  --heading-font-size-l: 30px;
+  font-size: var(--heading-font-size-l);
+}
+
+.heading-font-size-m {
+  --heading-font-size-m: 24px;
+  font-size: var(--heading-font-size-m);
+}
+
+.heading-font-size-s {
+  --heading-font-size-s: 20px;
+  font-size: var(--heading-font-size-s);
+}
+
+.heading-font-size-xs {
+  --heading-font-size-xs: 18px;
+  font-size: var(--heading-font-size-xs);
+}
+
 p,
 dl,
 ol,
@@ -317,8 +337,7 @@ main > .section:first-of-type {
 }
 
 /* section metadata */
-main .section.light,
-main .section.highlight {
+main .section.light {
   background-color: var(--light-color);
   margin: 0;
   padding: 40px 0;
