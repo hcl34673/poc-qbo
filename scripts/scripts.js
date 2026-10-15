@@ -11,6 +11,9 @@ import {
   loadCSS,
   buildBlock,
 } from './aem.js';
+import {
+  KEY_RE, matchHeadings, classesOf,
+} from './heading-key.js';
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
   const innerTT = window.trustedTypes.createPolicy('tt-inner', {
@@ -142,6 +145,18 @@ function decorateButtons(main) {
   });
 }
 
+// Size classes come from section-metadata keys like `h2-a3f9c1`; must run before decorateBlocks.
+function decorateHeadingSizes(main) {
+  main.querySelectorAll(':scope > div').forEach((section) => {
+    const entries = [...section.attributes]
+      .filter((a) => a.name.startsWith('data-') && KEY_RE.test(a.name.slice(5)))
+      .map((a) => ({ key: a.name.slice(5), value: a.value }));
+    if (!entries.length) return;
+    matchHeadings(section, entries).matched
+      .forEach(({ el, entry }) => el.classList.add(...classesOf(entry.value)));
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -153,6 +168,7 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateButtons(main);
+  decorateHeadingSizes(main);
 }
 
 /**
