@@ -112,9 +112,9 @@ function buildRows(html, blocks, doc) {
   const rows = [];
   if (blocks.length) {
     const detail = blocks.map((b) => `${b.label} · section ${b.section}`).join('\n');
-    rows.push({ title: blocks.length > 1 ? 'inside block (ambiguous)' : 'inside block', detail });
+    rows.push({ title: [...new Set(blocks.map((b) => b.label))].join(', '), detail, isScope: true });
   } else if (body.textContent.trim()) {
-    rows.push({ title: 'not inside a block', detail: 'default content, or not saved yet' });
+    rows.push({ title: 'Default content', detail: 'Selection is outside a block.', isScope: true });
   }
   // The editor only returns the selected content, so positions come from the saved source.
   const nodes = describeContainer(body).map((n) => {
@@ -153,38 +153,79 @@ function headingControl(h, sdk, status) {
 }
 
 function render(list, rows, sdk, status) {
-  list.replaceChildren(...rows.map(({ title, detail, headings = [] }) => {
-    const li = document.createElement('li');
-    const t = document.createElement('div');
-    const d = document.createElement('div');
-    t.className = 'role';
-    d.className = 'text';
-    t.textContent = title;
-    d.textContent = detail;
-    li.append(t, d, ...headings.map((h) => headingControl(h, sdk, status)));
-    return li;
-  }));
+  const card = document.createElement('li');
+  const title = document.createElement('div');
+  const disclosure = document.createElement('details');
+  const summary = document.createElement('summary');
+  const scope = rows.find((row) => row.isScope);
+  title.className = 'role';
+  title.textContent = scope ? scope.title : 'Default content';
+  disclosure.className = 'result-details';
+  disclosure.open = true;
+  summary.textContent = 'Show selection details';
+  disclosure.append(summary);
+
+  rows.filter((row) => row !== scope).forEach(({ title: nodeTitle, detail, headings = [] }) => {
+    const group = document.createElement('div');
+    const heading = document.createElement('div');
+    group.className = 'detail-group';
+    heading.className = 'role';
+    heading.textContent = nodeTitle;
+    group.append(heading);
+    if (detail) {
+      const text = document.createElement('div');
+      text.className = 'text';
+      text.textContent = detail;
+      group.append(text);
+    }
+    group.append(...headings.map((h) => headingControl(h, sdk, status)));
+    disclosure.append(group);
+  });
+
+  if (scope?.detail) {
+    const text = document.createElement('div');
+    text.className = 'text detail-group';
+    text.textContent = scope.detail;
+    disclosure.append(text);
+  }
+  card.append(title, disclosure);
+  list.replaceChildren(card);
 }
 
 function renderOrphans(list, orphans, sdk, status) {
-  list.replaceChildren(...orphans.map((o) => {
-    const li = document.createElement('li');
-    const t = document.createElement('div');
-    const btn = document.createElement('button');
-    t.className = 'role';
-    t.textContent = `orphaned: ${o.key} (section ${o.sectionIndex})`;
-    btn.textContent = 'Remove';
-    btn.addEventListener('click', async () => {
+  const card = document.createElement('li');
+  const title = document.createElement('div');
+  const disclosure = document.createElement('details');
+  const summary = document.createElement('summary');
+  title.className = 'role';
+  title.textContent = `Orphaned heading keys (${orphans.length})`;
+  disclosure.className = 'result-details';
+  disclosure.open = true;
+  summary.textContent = 'Show keys and actions';
+  disclosure.append(summary);
+  orphans.forEach((orphan) => {
+    const row = document.createElement('div');
+    const label = document.createElement('div');
+    const button = document.createElement('button');
+    row.className = 'orphan-row';
+    label.className = 'role';
+    label.textContent = `Section ${orphan.sectionIndex}: ${orphan.key}`;
+    button.className = 'da-ds-button da-ds-button-secondary';
+    button.textContent = 'Remove key';
+    button.addEventListener('click', async () => {
       try {
-        await removeOrphan(sdk, o);
-        li.remove();
+        await removeOrphan(sdk, orphan);
+        row.remove();
+        if (!disclosure.querySelector('.orphan-row')) card.remove();
       } catch (e) {
         status.textContent = e.message;
       }
     });
-    li.append(t, btn);
-    return li;
-  }));
+    row.append(label, button);
+    disclosure.append(row);
+  });
+  card.append(title, disclosure);
+  list.replaceChildren(card);
 }
 
 // getSelection never settles when the selection is empty, so race it with a timeout.
@@ -235,7 +276,7 @@ export default async function init() {
       const rows = buildRows(html, blocks, doc);
       log('selection', { html, blocks, rows });
       render(list, rows, sdk, status);
-      status.textContent = `${rows.length} result(s)`;
+      status.textContent = 'Selection found';
     } catch (e) {
       log('error', e);
     } finally {
