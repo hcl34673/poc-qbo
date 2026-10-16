@@ -50,8 +50,8 @@ export const headingKey = (el, section) => `${el.tagName.toLowerCase()}-${hash(s
 export const KEY_RE = /^(h[1-6]|p)-[a-z0-9]{6}-[a-z0-9]{6}$/;
 
 export const SIZES = ['xs', 's', 'm', 'l', 'xl', 'xxl'];
-// Headings use their own level; a paragraph borrows the heading level passed as `as`.
-export const sizeClass = (el, size, as) => `${/^h[1-6]$/i.test(el.tagName) ? el.tagName.toLowerCase() : as}-size-${size}`;
+// Each target uses its own tag in the applied size class.
+export const sizeClass = (el, size) => `${el.tagName.toLowerCase()}-size-${size}`;
 
 // Also accepts the legacy `h2sizexxl` form and normalizes it to `h2-size-xxl`.
 const LEGACY_RE = /^(h[1-6])size(xxl|xl|l|m|s|xs)$/;
@@ -60,7 +60,7 @@ export const classesOf = (value = '') => value.split(/[\s,]+/).filter(Boolean)
 
 /** `h3-size-xl` -> { as: 'h3', size: 'xl' }; empty strings when it doesn't match. */
 export function parseSizeClass(cls = '') {
-  const m = /^(h[1-6])-size-(xxl|xl|l|m|s|xs)$/.exec(classesOf(cls)[0] || '');
+  const m = /^(p|h[1-6])-size-(xxl|xl|l|m|s|xs)$/.exec(classesOf(cls)[0] || '');
   return { as: m?.[1] || '', size: m?.[2] || '' };
 }
 

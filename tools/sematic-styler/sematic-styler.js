@@ -128,35 +128,26 @@ function buildRows(html, blocks, doc) {
   return [...rows, ...nodes];
 }
 
-const LEVELS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-
 function headingControl(h, sdk, status) {
   const wrap = document.createElement('label');
   wrap.className = 'size';
-  wrap.append(`section ${h.sectionIndex} \u00b7 ${h.key} `);
+  const target = h.block ? `${h.blockName} \u00b7 ${h.position}` : `default content \u00b7 ${h.defaultPosition}`;
+  wrap.append(`${target} `);
   const cur = currentStyle(h.section, h.el);
-  const level = document.createElement('select');
-  level.append(...LEVELS.map((l) => new Option(l, l)));
-  level.value = cur.as || 'h2';
   const select = document.createElement('select');
   select.append(new Option('no size', ''), ...SIZES.map((s) => new Option(s, s)));
   select.value = cur.size;
   const save = async () => {
     status.textContent = 'Saving\u2026';
     try {
-      await setHeadingSize(sdk, h, select.value, level.value);
-      status.textContent = `Saved ${h.key}`;
+      await setHeadingSize(sdk, h, select.value);
+      status.textContent = `Saved ${target}`;
     } catch (e) {
       log('save error', e);
       status.textContent = e.message;
     }
   };
   select.addEventListener('change', save);
-  // Paragraphs pick which heading style to borrow.
-  if (h.el.tagName === 'P') {
-    level.addEventListener('change', () => select.value && save());
-    wrap.append('style as ', level);
-  }
   wrap.append(select);
   return wrap;
 }

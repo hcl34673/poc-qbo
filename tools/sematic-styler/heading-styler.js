@@ -1,9 +1,46 @@
 import {
-  headingKey, sizeClass, parseSizeClass, matchHeadings, KEY_RE,
+  headingKey, parseSizeClass, matchHeadings, KEY_RE,
 } from '../../scripts/heading-key.js';
 
 const HEADINGS = 'h1,h2,h3,h4,h5,h6,p';
 const rowKey = (row) => row.children[0]?.textContent.trim().toLowerCase();
+const blockOf = (el) => el.closest('main > div > div[class]');
+const tagName = (el) => el.tagName.toLowerCase();
+
+function positionKey(el, block) {
+  return `${tagName(el)}-${[...block.querySelectorAll(el.tagName)].indexOf(el) + 1}`;
+}
+
+function defaultElements(section, tag) {
+  return [...section.querySelectorAll(tag)]
+    .filter((el) => !blockOf(el) && !el.closest('.section-metadata'));
+}
+
+function defaultPositionKey(el, section) {
+  return `${tagName(el)}-${defaultElements(section, el.tagName).indexOf(el) + 1}`;
+}
+
+function blockStyle(block, el) {
+  if (!block) return null;
+  const key = positionKey(el, block);
+  const tag = tagName(el);
+  const specificPattern = new RegExp(`^${key}-size-(xxl|xl|l|m|s|xs)$`);
+  const allPattern = new RegExp(`^${tag}-size-(xxl|xl|l|m|s|xs)$`);
+  const names = [...block.classList];
+  const specific = names.map((name) => name.match(specificPattern)).find(Boolean)?.[1];
+  const all = names.map((name) => name.match(allPattern)).find(Boolean)?.[1];
+  const size = specific || all;
+  return size ? parseSizeClass(`${tag}-size-${size}`) : null;
+}
+
+function setBlockStyle(block, el, size) {
+  const key = positionKey(el, block);
+  [...block.classList]
+    .filter((name) => name.startsWith(`${key}-size-`) || name.startsWith(`${key}-as-`))
+    .forEach((name) => block.classList.remove(name));
+  if (!size) return;
+  block.classList.add(`${key}-size-${size}`);
+}
 
 function sourceUrl({ org, repo, path }) {
   const p = (path || '/').replace(/\.html$/, '').replace(/\/$/, '') || '/index';
@@ -42,14 +79,49 @@ function setRow(section, key, value) {
     existing.children[1].textContent = value;
     return;
   }
-  const d = section.ownerDocument;
-  const row = d.createElement('div');
-  [key, value].forEach((t) => {
-    const cell = d.createElement('div');
-    cell.textContent = t;
+  const row = section.ownerDocument.createElement('div');
+  [key, value].forEach((text) => {
+    const cell = section.ownerDocument.createElement('div');
+    cell.textContent = text;
     row.append(cell);
   });
   metaOf(section, true).append(row);
+}
+
+function removeEmptyMetadata(section) {
+  const meta = metaOf(section);
+  if (meta && !meta.children.length) meta.remove();
+}
+
+function defaultStyle(section, el) {
+  const styleRow = findRow(section, 'style');
+  const tokens = styleRow?.children[1]?.textContent.split(/[\s,]+/) || [];
+  const tag = tagName(el);
+  const key = defaultPositionKey(el, section);
+  const specific = tokens.find((token) => (
+    new RegExp(`^${key}-size-(xxl|xl|l|m|s|xs)$`).test(token)
+  ));
+  const general = tokens.find((token) => (
+    new RegExp(`^${tag}-size-(xxl|xl|l|m|s|xs)$`).test(token)
+  ));
+  const className = specific || general;
+  return className ? parseSizeClass(className) : null;
+}
+
+function setDefaultStyle(section, el, size) {
+  const key = defaultPositionKey(el, section);
+  const styleRow = findRow(section, 'style');
+  const valueCell = styleRow?.children[1];
+  const tokens = valueCell?.textContent.split(/[\s,]+/).filter(Boolean) || [];
+  const next = tokens.filter((token) => !token.startsWith(`${key}-size-`));
+  if (size) next.push(`${key}-size-${size}`);
+
+  if (next.length) {
+    setRow(section, 'style', next.join(', '));
+  } else {
+    styleRow?.remove();
+    removeEmptyMetadata(section);
+  }
 }
 
 const sectionsOf = (doc) => [...doc.querySelectorAll('main > div')];
@@ -61,29 +133,45 @@ const entriesOf = (section) => [...(metaOf(section)?.children || [])]
 const matchOf = (section, el) => matchHeadings(section, entriesOf(section))
   .matched.find((m) => m.el === el);
 
-/** Section, section number and key for a heading element in the source doc. */
+/** Section key and block position for a heading or paragraph in the source document. */
 export function headingInfo(el) {
   const section = el.closest('main > div');
   const sectionIndex = sectionsOf(el.ownerDocument).indexOf(section) + 1;
+  const block = blockOf(el);
   return {
-    el, section, sectionIndex, key: headingKey(el, section),
+    el,
+    section,
+    sectionIndex,
+    key: headingKey(el, section),
+    block,
+    blockName: (block && [...block.classList].find((name) => name !== 'block')) || '',
+    position: block ? positionKey(el, block) : '',
+    defaultPosition: block ? '' : defaultPositionKey(el, section),
   };
 }
 
-/** Current style of a heading/paragraph, e.g. { as: 'h2', size: 'xxl' }; empty strings when unstyled. */
+/** Current heading/paragraph style; empty strings when unstyled. */
 export function currentStyle(section, el) {
-  return parseSizeClass(matchOf(section, el)?.entry.value);
+  return blockStyle(blockOf(el), el)
+    || defaultStyle(section, el)
+    || parseSizeClass(matchOf(section, el)?.entry.value);
 }
 
 /** Re-reads the source before writing so edits made since the selection aren't overwritten. */
-export async function setHeadingSize(sdk, { sectionIndex, key }, size, as) {
+export async function setHeadingSize(sdk, { sectionIndex, key }, size) {
   const doc = await loadDoc(sdk);
   const section = sectionsOf(doc)[sectionIndex - 1];
   const el = section && [...section.querySelectorAll(HEADINGS)]
     .find((h) => headingKey(h, section) === key);
   if (!el) throw new Error('Element moved since selection. Reselect it.');
+  const block = blockOf(el);
   matchOf(section, el)?.entry.row.remove();
-  if (size) setRow(section, key, sizeClass(el, size, as));
+  if (block) {
+    setBlockStyle(block, el, size);
+    removeEmptyMetadata(section);
+  } else {
+    setDefaultStyle(section, el, size);
+  }
   await saveDoc(sdk, doc);
 }
 
