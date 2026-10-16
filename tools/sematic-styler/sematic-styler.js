@@ -128,7 +128,7 @@ function buildRows(html, blocks, doc) {
   return [...rows, ...nodes];
 }
 
-function headingControl(h, sdk, status) {
+function headingControl(h, sdk, status, setLoading) {
   const wrap = document.createElement('label');
   wrap.className = 'size';
   const target = h.block ? `${h.blockName} \u00b7 ${h.position}` : `default content \u00b7 ${h.defaultPosition}`;
@@ -138,13 +138,15 @@ function headingControl(h, sdk, status) {
   select.append(new Option('no size', ''), ...SIZES.map((s) => new Option(s, s)));
   select.value = cur.size;
   const save = async () => {
-    status.textContent = 'Saving\u2026';
+    setLoading(true);
     try {
       await setHeadingSize(sdk, h, select.value);
       status.textContent = `Saved ${target}`;
     } catch (e) {
       log('save error', e);
       status.textContent = e.message;
+    } finally {
+      setLoading(false);
     }
   };
   select.addEventListener('change', save);
@@ -152,7 +154,7 @@ function headingControl(h, sdk, status) {
   return wrap;
 }
 
-function render(list, rows, sdk, status) {
+function render(list, rows, sdk, status, setLoading) {
   const card = document.createElement('li');
   const title = document.createElement('div');
   const disclosure = document.createElement('details');
@@ -178,7 +180,7 @@ function render(list, rows, sdk, status) {
       text.textContent = detail;
       group.append(text);
     }
-    group.append(...headings.map((h) => headingControl(h, sdk, status)));
+    group.append(...headings.map((h) => headingControl(h, sdk, status, setLoading)));
     disclosure.append(group);
   });
 
@@ -192,7 +194,7 @@ function render(list, rows, sdk, status) {
   list.replaceChildren(card);
 }
 
-function renderOrphans(list, orphans, sdk, status) {
+function renderOrphans(list, orphans, sdk, status, setLoading) {
   const card = document.createElement('li');
   const title = document.createElement('div');
   const disclosure = document.createElement('details');
@@ -213,12 +215,15 @@ function renderOrphans(list, orphans, sdk, status) {
     button.className = 'da-ds-button da-ds-button-secondary';
     button.textContent = 'Remove key';
     button.addEventListener('click', async () => {
+      setLoading(true);
       try {
         await removeOrphan(sdk, orphan);
         row.remove();
         if (!disclosure.querySelector('.orphan-row')) card.remove();
       } catch (e) {
         status.textContent = e.message;
+      } finally {
+        setLoading(false);
       }
     });
     row.append(label, button);
@@ -239,19 +244,27 @@ function readSelection(actions) {
 export default async function init() {
   const status = document.getElementById('status');
   const list = document.getElementById('list');
+  const loading = document.getElementById('loading');
+  const setLoading = (visible) => {
+    loading.hidden = !visible;
+    loading.setAttribute('aria-hidden', String(!visible));
+  };
   const sdk = await DA_SDK;
   log('SDK ready', sdk.context, Object.keys(sdk.actions));
 
   document.getElementById('repair').addEventListener('click', async () => {
-    status.textContent = 'Checking heading keys\u2026';
+    setLoading(true);
     try {
       const r = await repairAll(sdk);
       log('repair', r);
-      status.textContent = `${r.rekeyed.length} re-keyed, ${r.orphaned.length} orphaned`;
-      renderOrphans(list, r.orphaned, sdk, status);
+      status.textContent = `${r.cleaned.length} obsolete classes removed, `
+        + `${r.rekeyed.length} re-keyed, ${r.orphaned.length} orphaned`;
+      renderOrphans(list, r.orphaned, sdk, status, setLoading);
     } catch (e) {
       log('repair error', e);
       status.textContent = e.message;
+    } finally {
+      setLoading(false);
     }
   });
 
@@ -275,7 +288,7 @@ export default async function init() {
       const blocks = doc ? findEnclosingBlocks(doc, text) : [];
       const rows = buildRows(html, blocks, doc);
       log('selection', { html, blocks, rows });
-      render(list, rows, sdk, status);
+      render(list, rows, sdk, status, setLoading);
       status.textContent = 'Selection found';
     } catch (e) {
       log('error', e);

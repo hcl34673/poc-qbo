@@ -16,6 +16,32 @@
   font: 14px/1.4 var(--ds-font);
 }
 
+.loading-overlay {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(255 255 255 / 55%);
+}
+
+.loading-overlay[hidden] {
+  display: none;
+}
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--ds-border-strong);
+  border-top-color: var(--ds-accent);
+  border-radius: 50%;
+  animation: loading-spin 700ms linear infinite;
+}
+
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
+}
+
 .da-extension-ds *,
 .da-extension-ds *::before,
 .da-extension-ds *::after {

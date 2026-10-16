@@ -3,6 +3,7 @@ import {
 } from '../../scripts/heading-key.js';
 
 const HEADINGS = 'h1,h2,h3,h4,h5,h6,p';
+const POSITIONAL_CLASS_RE = /^(h[1-6]|p)-(\d+)-(?:size-(?:xxl|xl|l|m|s|xs)|as-(?:h[1-6]|p))$/;
 const rowKey = (row) => row.children[0]?.textContent.trim().toLowerCase();
 const blockOf = (el) => el.closest('main > div > div[class]');
 const tagName = (el) => el.tagName.toLowerCase();
@@ -125,10 +126,119 @@ function setDefaultStyle(section, el, size) {
 }
 
 const sectionsOf = (doc) => [...doc.querySelectorAll('main > div')];
-
 const entriesOf = (section) => [...(metaOf(section)?.children || [])]
   .filter((r) => KEY_RE.test(rowKey(r)))
   .map((row) => ({ key: rowKey(row), value: row.children[1]?.textContent.trim() || '', row }));
+
+function positionalIndexBefore(el, tag, elements) {
+  const index = elements.indexOf(el);
+  return elements.slice(0, index).filter((element) => tagName(element) === tag).length + 1;
+}
+
+function prunePositionalClasses(container, elements) {
+  const counts = new Map();
+  elements.forEach((el) => counts.set(tagName(el), (counts.get(tagName(el)) || 0) + 1));
+  const removed = [];
+  [...container.classList].forEach((name) => {
+    const match = name.match(POSITIONAL_CLASS_RE);
+    if (match && Number(match[2]) > (counts.get(match[1]) || 0)) {
+      container.classList.remove(name);
+      removed.push(name);
+    }
+  });
+  return removed;
+}
+
+function pruneStyleRow(section) {
+  const styleRow = findRow(section, 'style');
+  const valueCell = styleRow?.children[1];
+  if (!valueCell) return [];
+  const tokens = valueCell.textContent.split(/[\s,]+/).filter(Boolean);
+  const elements = HEADINGS.split(',').flatMap((tag) => defaultElements(section, tag));
+  const counts = new Map();
+  elements.forEach((el) => counts.set(tagName(el), (counts.get(tagName(el)) || 0) + 1));
+  const removed = [];
+  const kept = tokens.filter((token) => {
+    const match = token.match(POSITIONAL_CLASS_RE);
+    const stale = match && Number(match[2]) > (counts.get(match[1]) || 0);
+    if (stale) removed.push(token);
+    return !stale;
+  });
+  if (removed.length) {
+    if (kept.length) valueCell.textContent = kept.join(', ');
+    else styleRow.remove();
+    removeEmptyMetadata(section);
+  }
+  return removed;
+}
+
+function pruneSectionStyles(section) {
+  const removed = [];
+  const sectionElements = [...section.querySelectorAll(HEADINGS)]
+    .filter((el) => !el.closest('.section-metadata'));
+  removed.push(...prunePositionalClasses(section, sectionElements));
+  section.querySelectorAll(':scope > div[class]').forEach((block) => {
+    removed.push(...prunePositionalClasses(block, [...block.querySelectorAll(HEADINGS)]));
+  });
+  removed.push(...pruneStyleRow(section));
+  return removed;
+}
+
+function removePositionStyle(container, tag, index) {
+  const prefix = `${tag}-${index}-`;
+  const removed = [...container.classList].filter((name) => name.startsWith(prefix));
+  removed.forEach((name) => container.classList.remove(name));
+  return removed;
+}
+
+function removeRetaggedStyles(section) {
+  const entries = entriesOf(section);
+  const headings = [...section.querySelectorAll(HEADINGS)];
+  const current = headings.map((el) => ({ el, key: headingKey(el, section).split('-') }));
+  const oldKeys = entries.map(({ key }) => key.split('-'));
+  const removed = [];
+
+  current.forEach(({ el, key }) => {
+    const sameText = (parts) => parts[2] === key[2];
+    const oldLevels = oldKeys.filter((parts) => parts[0] !== key[0] && sameText(parts));
+    const newMatches = current.filter((candidate) => candidate.key[0] === key[0]
+      && sameText(candidate.key));
+    if (oldLevels.length !== 1 || newMatches.length !== 1) return;
+
+    const oldTag = oldLevels[0][0];
+    const sectionElements = [...section.querySelectorAll(HEADINGS)]
+      .filter((heading) => !heading.closest('.section-metadata'));
+    const sectionIndex = positionalIndexBefore(el, oldTag, sectionElements);
+    removed.push(...removePositionStyle(section, oldTag, sectionIndex));
+
+    const block = blockOf(el);
+    if (block) {
+      const blockElements = [...block.querySelectorAll(HEADINGS)];
+      const blockIndex = positionalIndexBefore(el, oldTag, blockElements);
+      removed.push(...removePositionStyle(block, oldTag, blockIndex));
+    } else {
+      const defaultHeadings = HEADINGS.split(',').flatMap((tag) => defaultElements(section, tag));
+      const defaultIndex = positionalIndexBefore(el, oldTag, defaultHeadings);
+      const styleRow = findRow(section, 'style');
+      const valueCell = styleRow?.children[1];
+      if (valueCell) {
+        const tokens = valueCell.textContent.split(/[\s,]+/).filter(Boolean);
+        const prefix = `${oldTag}-${defaultIndex}-`;
+        const kept = tokens.filter((token) => {
+          const match = token.startsWith(prefix);
+          if (match) removed.push(token);
+          return !match;
+        });
+        if (kept.length !== tokens.length) {
+          if (kept.length) valueCell.textContent = kept.join(', ');
+          else styleRow.remove();
+          removeEmptyMetadata(section);
+        }
+      }
+    }
+  });
+  return removed;
+}
 
 const matchOf = (section, el) => matchHeadings(section, entriesOf(section))
   .matched.find((m) => m.el === el);
@@ -178,8 +288,11 @@ export async function setHeadingSize(sdk, { sectionIndex, key }, size) {
 /** Re-keys edited or moved headings, saves if changed, returns orphaned entries. */
 export async function repairAll(sdk) {
   const doc = await loadDoc(sdk);
-  const total = { rekeyed: [], orphaned: [] };
+  const total = { rekeyed: [], orphaned: [], cleaned: [] };
   sectionsOf(doc).forEach((section, i) => {
+    total.cleaned.push(...removeRetaggedStyles(section)
+      .map((key) => ({ sectionIndex: i + 1, key })));
+    total.cleaned.push(...pruneSectionStyles(section).map((key) => ({ sectionIndex: i + 1, key })));
     const { matched, orphans } = matchHeadings(section, entriesOf(section));
     matched.filter((m) => m.entry.key !== m.key).forEach((m) => {
       m.entry.row.children[0].textContent = m.key;
@@ -187,7 +300,7 @@ export async function repairAll(sdk) {
     });
     total.orphaned.push(...orphans.map((o) => ({ sectionIndex: i + 1, key: o.key })));
   });
-  if (total.rekeyed.length) await saveDoc(sdk, doc);
+  if (total.rekeyed.length || total.cleaned.length) await saveDoc(sdk, doc);
   return total;
 }
 
