@@ -286,8 +286,8 @@ export async function setHeadingSize(sdk, { sectionIndex, key }, size) {
 }
 
 /** Re-keys edited or moved headings, saves if changed, returns orphaned entries. */
-export async function repairAll(sdk) {
-  const doc = await loadDoc(sdk);
+export async function repairAll(sdk, sourceDoc) {
+  const doc = sourceDoc || await loadDoc(sdk);
   const total = { rekeyed: [], orphaned: [], cleaned: [] };
   sectionsOf(doc).forEach((section, i) => {
     total.cleaned.push(...removeRetaggedStyles(section)

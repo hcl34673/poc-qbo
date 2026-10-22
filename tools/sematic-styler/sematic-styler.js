@@ -118,7 +118,7 @@ function contentTree(html, doc) {
   });
 }
 
-function headingControl(h, sdk, status, setLoading) {
+function headingControl(h, sdk, status, setLoading, pendingSizes) {
   const wrap = document.createElement('div');
   const content = document.createElement('div');
   const name = document.createElement('div');
@@ -135,29 +135,33 @@ function headingControl(h, sdk, status, setLoading) {
   preview.textContent = h.el.textContent.trim();
   content.append(name, preview);
   controls.className = 'tree-item-controls';
+  const id = `${h.sectionIndex}:${h.key}`;
   const cur = currentStyle(h.section, h.el);
   const select = document.createElement('select');
   select.setAttribute('aria-label', `Size for ${tag}: ${preview.textContent.slice(0, 40)}`);
   select.append(new Option('Default size', ''), ...SIZES.map((size) => new Option(size, size)));
-  select.value = cur.size;
-  let selectedSize = cur.size;
+  select.value = pendingSizes.has(id) ? pendingSizes.get(id) : cur.size;
+  let selectedSize = select.value;
   const remove = document.createElement('button');
   remove.className = 'remove-class';
   remove.type = 'button';
   remove.setAttribute('aria-label', `Remove applied size from ${tag}`);
   remove.title = 'Remove applied size';
-  remove.disabled = !cur.size;
+  remove.disabled = !select.value;
   remove.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 4h10M6 4V2.75h4V4m2 0-.5 9H4.5L4 4m2.5 2v5m3-5v5"/></svg>';
   const save = async (size) => {
+    pendingSizes.set(id, size);
     setLoading(true);
     try {
       await setHeadingSize(sdk, h, size);
       selectedSize = size;
+      pendingSizes.set(id, size);
       remove.disabled = !size;
       status.textContent = size ? `Saved ${target}` : `Removed applied size from ${target}`;
     } catch (e) {
       log('save error', e);
       status.textContent = e.message;
+      pendingSizes.set(id, selectedSize);
       select.value = selectedSize;
     } finally {
       setLoading(false);
@@ -170,7 +174,7 @@ function headingControl(h, sdk, status, setLoading) {
   return wrap;
 }
 
-function render(list, tree, sdk, status, setLoading, selectionChanged) {
+function render(list, tree, sdk, status, setLoading, selectionChanged, pendingSizes) {
   if (!tree.length) { list.replaceChildren(); return; }
   const expanded = new Map([...list.querySelectorAll('.tree-section-details')]
     .map((details) => [Number(details.dataset.sectionIndex), details.open]));
@@ -211,7 +215,7 @@ function render(list, tree, sdk, status, setLoading, selectionChanged) {
       elementList.className = 'tree-elements';
       elements.forEach((h) => {
         const elementItem = document.createElement('li');
-        elementItem.append(headingControl(h, sdk, status, setLoading));
+        elementItem.append(headingControl(h, sdk, status, setLoading, pendingSizes));
         elementList.append(elementItem);
       });
       groupItem.append(groupName, elementList);
@@ -303,6 +307,7 @@ export default async function init() {
   let lastTreeRefresh = 0;
   let sourceDoc;
   let busy = false;
+  const pendingSizes = new Map();
   setInterval(async () => {
     if (busy || document.hidden) return;
     busy = true;
@@ -315,7 +320,18 @@ export default async function init() {
       if (refreshSource) {
         const freshDoc = await loadSource(sdk);
         lastTreeRefresh = Date.now();
-        if (freshDoc) sourceDoc = freshDoc;
+        if (freshDoc) {
+          await repairAll(sdk, freshDoc);
+          sourceDoc = freshDoc;
+          const sections = [...sourceDoc.querySelectorAll('main > div')];
+          pendingSizes.forEach((size, id) => {
+            const [sectionIndex, key] = id.split(':');
+            const section = sections[Number(sectionIndex) - 1];
+            const el = section && [...section.querySelectorAll('h1,h2,h3,h4,h5,h6,p')]
+              .find((candidate) => headingInfo(candidate).key === key);
+            if (!el || currentStyle(section, el).size === size) pendingSizes.delete(id);
+          });
+        }
         else {
           status.textContent = 'Unable to refresh the source. Retrying...';
           if (!sourceDoc) return;
@@ -323,7 +339,7 @@ export default async function init() {
       }
       const tree = contentTree(html, sourceDoc);
       log('selection and document tree', { html, tree });
-      render(list, tree, sdk, status, setLoading, selectionChanged);
+      render(list, tree, sdk, status, setLoading, selectionChanged, pendingSizes);
       if (html === null) status.textContent = 'Select content in the document.';
       else status.textContent = tree.length ? 'Content tree loaded' : 'No sections found.';
     } catch (e) {
